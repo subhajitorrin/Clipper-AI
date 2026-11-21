@@ -38,7 +38,20 @@ export async function fetchProjects(): Promise<ProjectJob[]> {
 }
 
 export async function fetchProjectById(id: string): Promise<ProjectJob | null> {
-  // Check session memory first
+  // Check API route first for real Supabase job
+  try {
+    const res = await fetch(`/api/jobs/${id}`);
+    if (res.ok) {
+      const json = await res.json();
+      if (json.success && json.data) {
+        return json.data;
+      }
+    }
+  } catch {
+    // Fall through
+  }
+
+  // Check session memory
   if (sessionProjects.has(id)) {
     return sessionProjects.get(id)!;
   }
@@ -78,6 +91,18 @@ export async function fetchProjectById(id: string): Promise<ProjectJob | null> {
 }
 
 export async function fetchClipsByJobId(jobId: string): Promise<GeneratedClip[]> {
+  try {
+    const res = await fetch(`/api/jobs/${jobId}`);
+    if (res.ok) {
+      const json = await res.json();
+      if (json.success && json.data && json.data.clips) {
+        return json.data.clips;
+      }
+    }
+  } catch {
+    // Fall through
+  }
+
   if (isSupabaseConfigured && supabase) {
     try {
       const { data, error } = await supabase

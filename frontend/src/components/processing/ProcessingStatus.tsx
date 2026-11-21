@@ -56,19 +56,21 @@ export function ProcessingStatus({ initialProject }: ProcessingStatusProps) {
       return;
     }
 
-    // Prototype progression simulation: if newly created session job, step through stages cleanly
+    // Progression updates: poll the real job status from Supabase
     const interval = setInterval(async () => {
-      // 1. Try real fetch first
+      if (!project?.id) return;
+
       const fresh = await fetchProjectById(project.id);
-      if (fresh && (fresh.status !== project.status || fresh.current_stage !== project.current_stage)) {
+      if (fresh) {
         setProject(fresh);
         if (fresh.status === "completed") {
+          clearInterval(interval);
           router.push(`/results/${fresh.id}`);
+          return;
         }
-        return;
       }
 
-      // 2. Simulated transition for newly spawned prototype tasks
+      // Simulated transition only for mock tasks
       if (project.id.startsWith("cf-") && project.status === "processing") {
         const stageOrder: ProcessingStageId[] = ["audio", "transcribing", "moments", "rendering"];
         const currentIndex = stageOrder.indexOf(project.current_stage || "audio");

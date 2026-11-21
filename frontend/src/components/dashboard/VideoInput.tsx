@@ -45,14 +45,23 @@ export function VideoInput() {
 
     setIsSubmitting(true);
     try {
-      const newJob = await createProjectJob({
-        videoUrl: activeTab === "youtube" ? youtubeUrl.trim() : undefined,
-        videoPath: activeTab === "upload" && selectedFile ? selectedFile.name : undefined,
-        clipDuration: duration,
-        requestedClips: clipCount,
+      const res = await fetch("/api/jobs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          videoUrl: activeTab === "youtube" ? youtubeUrl.trim() : undefined,
+          videoPath: activeTab === "upload" && selectedFile ? selectedFile.name : undefined,
+          clipDuration: duration,
+          requestedClips: clipCount,
+        }),
       });
 
-      router.push(`/processing/${newJob.id}`);
+      const json = await res.json();
+      if (!res.ok || !json.success) {
+        throw new Error(json.error || "Failed to create project job");
+      }
+
+      router.push(`/processing/${json.data.id}`);
     } catch {
       setIsSubmitting(false);
     }

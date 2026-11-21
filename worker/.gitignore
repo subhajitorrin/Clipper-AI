@@ -1,0 +1,36 @@
+# Environment variables & secrets
+.env
+.env.local
+*.env
+
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Temporary video processing files
+temp/
+*.mp4
+*.mp3
+*.wav
+*.m4a
+*.part
+*.ytdl
+
+# Downloaded binaries
+bin/
+*.exe
+
+# IDE & OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

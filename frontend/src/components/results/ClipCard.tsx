@@ -27,11 +27,19 @@ export function ClipCard({ clip, onPreview }: ClipCardProps) {
         onClick={() => onPreview(clip)}
         className="relative aspect-[9/16] w-full overflow-hidden bg-[#090909] cursor-pointer"
       >
-        <img
-          src={clip.thumbnail_url}
-          alt={clip.title}
-          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-        />
+        {clip.thumbnail_url ? (
+          <img
+            src={clip.thumbnail_url}
+            alt={clip.title}
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+        ) : (
+          <video
+            src={`${clip.output_url}#t=0.1`}
+            preload="metadata"
+            className="h-full w-full object-cover"
+          />
+        )}
 
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
