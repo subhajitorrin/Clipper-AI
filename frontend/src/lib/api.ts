@@ -44,7 +44,7 @@ export async function fetchProjectById(id: string): Promise<ProjectJob | null> {
     if (res.ok) {
       const json = await res.json();
       if (json.success && json.data) {
-        return json.data;
+        return json.data.job || json.data;
       }
     }
   } catch {

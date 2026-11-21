@@ -12,12 +12,14 @@ interface ClipSettingsProps {
 }
 
 const DURATION_OPTIONS = [
+  { value: 15, label: "15s", description: "Ultra-fast hooks" },
   { value: 30, label: "30s", description: "Quick punchy hooks" },
   { value: 45, label: "45s", description: "Standard Shorts / Reels" },
   { value: 60, label: "60s", description: "In-depth insights" },
 ];
 
 const COUNT_OPTIONS = [
+  { value: 1, label: "1 clip" },
   { value: 3, label: "3 clips" },
   { value: 5, label: "5 clips" },
   { value: 10, label: "10 clips" },
@@ -37,7 +39,7 @@ export function ClipSettings({
           <Clock className="h-3.5 w-3.5" />
           <span>Clip Target Duration</span>
         </div>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-4 gap-2">
           {DURATION_OPTIONS.map((opt) => (
             <button
               type="button"
@@ -65,7 +67,7 @@ export function ClipSettings({
           <Layers className="h-3.5 w-3.5" />
           <span>Number of Clips</span>
         </div>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-4 gap-2">
           {COUNT_OPTIONS.map((opt) => (
             <button
               type="button"

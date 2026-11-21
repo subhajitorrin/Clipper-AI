@@ -53,14 +53,16 @@ export function ClipPreview({ clip, onClose }: ClipPreviewProps) {
         </div>
 
         {/* Video Player (9:16 Aspect ratio container) */}
-        <div className="relative bg-[#090909] flex items-center justify-center p-4 flex-1 overflow-hidden min-h-[360px] max-h-[500px]">
+        <div className="relative bg-[#090909] flex flex-col items-center justify-center p-4 flex-1 overflow-hidden min-h-[360px]">
           <video
             ref={videoRef}
             src={clip.output_url}
             controls
             autoPlay
             playsInline
-            className="h-full max-h-[480px] w-auto aspect-[9/16] rounded-xl object-contain bg-black border border-[#292929]"
+            controlsList="nodownload"
+            style={{ width: "auto", height: "100%", maxHeight: "420px" }}
+            className="aspect-[9/16] rounded-xl object-contain bg-black shadow-lg"
           />
         </div>
 

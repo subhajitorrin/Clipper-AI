@@ -69,39 +69,10 @@ export function ProcessingStatus({ initialProject }: ProcessingStatusProps) {
           return;
         }
       }
-
-      // Simulated transition only for mock tasks
-      if (project.id.startsWith("cf-") && project.status === "processing") {
-        const stageOrder: ProcessingStageId[] = ["audio", "transcribing", "moments", "rendering"];
-        const currentIndex = stageOrder.indexOf(project.current_stage || "audio");
-
-        if (currentIndex < stageOrder.length - 1) {
-          const nextStage = stageOrder[currentIndex + 1];
-          const updated = updateSessionProjectStage(project.id, {
-            current_stage: nextStage,
-            stage_progress: Math.round(((currentIndex + 2) / stageOrder.length) * 100),
-          });
-          if (updated) setProject({ ...updated });
-        } else {
-          // Finish processing
-          const completed = updateSessionProjectStage(project.id, {
-            status: "completed",
-            stage_progress: 100,
-            clip_count: project.requested_clips,
-          });
-          if (completed) {
-            setProject({ ...completed });
-            clearInterval(interval);
-            setTimeout(() => {
-              router.push(`/results/${project.id}`);
-            }, 1200);
-          }
-        }
-      }
-    }, 3500);
+    }, 2000);
 
     return () => clearInterval(interval);
-  }, [project, router]);
+  }, [project.id, router]);
 
   // Compute stage statuses based on current state
   const stageOrder: ProcessingStageId[] = ["audio", "transcribing", "moments", "rendering"];

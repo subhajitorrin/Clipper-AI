@@ -23,9 +23,10 @@ class Analyzer:
         # Provide sample timestamps to help the model pick precise ranges
         sample_context = f"Total words: {len(words)}. First word at {words[0]['start'] if words else 0}s, last at {words[-1]['end'] if words else 0}s."
 
+        tolerance = 5 if clip_duration <= 15 else 10
         prompt = f"""You are a viral YouTube Shorts and TikTok video editor.
 Analyze the following transcript and find the top {requested_clips} most viral, engaging, and standalone moments.
-Each moment should be approximately {clip_duration} seconds long (within ±10 seconds).
+Each moment should be approximately {clip_duration} seconds long (within ±{tolerance} seconds).
 Ensure the start has a strong hook and the end has a natural conclusion or cliffhanger.
 
 Context: {sample_context}
