@@ -1,16 +1,44 @@
 import subprocess
 import os
 from services.ffmpeg_utils import get_ffmpeg_exe
+from services.face_tracker import FaceTracker
 
 class VideoEditor:
+    face_tracker = None
+
+    @classmethod
+    def get_face_tracker(cls):
+        if cls.face_tracker is None:
+            cls.face_tracker = FaceTracker()
+        return cls.face_tracker
+
     @staticmethod
     def render_vertical_clip(input_video_path: str, output_clip_path: str, words_for_clip: list = None) -> str:
-        """Crops 16:9 to centered 9:16 vertical video with smooth framing."""
+        """
+        Reframes landscape video (16:9) to vertical 9:16 (1080x1920) by tracking the main character/speaker's
+        face so they stay centered in the frame.
+        """
         os.makedirs(os.path.dirname(output_clip_path), exist_ok=True)
         ffmpeg = get_ffmpeg_exe()
 
-        # 9:16 center crop filter: crops width to (height * 9 / 16) and scales to standard 1080x1920
-        vf_filter = "crop=ih*(9/16):ih:(iw-ow)/2:0,scale=1080:1920"
+        crop_x_expr = "(iw-ow)/2" # Default to center
+
+        try:
+            tracker = VideoEditor.get_face_tracker()
+            center_x = tracker.detect_crop_center(input_video_path)
+            if center_x is not None:
+                # Target crop width for 9:16 is ow = ih * (9 / 16)
+                # To place center_x at the center of the crop:
+                # crop_x = center_x - (ow / 2)
+                # Bound between 0 and (iw - ow)
+                crop_x_expr = f"'min(max(0,{center_x}-(ih*(9/16)/2)),iw-(ih*(9/16)))'"
+                print(f"  [VideoEditor] Smart framing applied: center_x={center_x}")
+        except Exception as e:
+            print(f"  [VideoEditor] Face tracking warning ({e}), falling back to center crop.")
+            crop_x_expr = "(iw-ow)/2"
+
+        # 9:16 dynamic crop filter & scale to standard 1080x1920
+        vf_filter = f"crop=ih*(9/16):ih:{crop_x_expr}:0,scale=1080:1920"
 
         cmd = [
             ffmpeg,
