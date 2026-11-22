@@ -20,12 +20,15 @@ class SupabaseService:
             return job
         return None
 
-    def update_progress(self, job_id: str, stage: str, progress: int):
+    def update_progress(self, job_id: str, stage: str, progress: int, metadata: dict = None):
         """Updates real-time progress for frontend."""
-        self.supabase.table("jobs").update({
+        payload = {
             "current_stage": stage,
             "stage_progress": progress
-        }).eq("id", job_id).execute()
+        }
+        if metadata is not None:
+            payload["metadata"] = metadata
+        self.supabase.table("jobs").update(payload).eq("id", job_id).execute()
 
     def complete_job(self, job_id: str):
         self.supabase.table("jobs").update({

@@ -10,6 +10,7 @@ export interface ProjectJob {
   status: JobStatus;
   current_stage?: 'audio' | 'transcribing' | 'moments' | 'rendering';
   stage_progress?: number; // 0 to 100
+  metadata?: Record<string, any>;
   error_message?: string;
   requested_clips: number;
   clip_duration: number; // 30, 45, or 60 seconds

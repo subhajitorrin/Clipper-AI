@@ -2,6 +2,7 @@ import { supabase, isSupabaseConfigured } from "@/src/lib/supabase/client";
 import { Database, JobStatus, PipelineStage } from "@/src/types/database.types";
 import { ProjectJob, GeneratedClip } from "@/src/types";
 import { MOCK_PROJECTS, MOCK_CLIPS } from "@/src/mock/projects";
+import { getYouTubeThumbnail } from "@/src/lib/utils";
 
 type JobRow = Database["public"]["Tables"]["jobs"]["Row"];
 type ClipRow = Database["public"]["Tables"]["clips"]["Row"];
@@ -24,11 +25,12 @@ export class JobsService {
             title: job.title || job.video_url || job.video_path || "Untitled Project",
             video_url: job.video_url ?? undefined,
             video_path: job.video_path ?? undefined,
-            thumbnail_url: job.thumbnail_url ?? undefined,
+            thumbnail_url: job.thumbnail_url || (job.video_url ? getYouTubeThumbnail(job.video_url) : undefined),
             duration: job.duration ?? 1800,
             status: job.status as JobStatus,
             current_stage: (job.current_stage as PipelineStage) ?? "audio",
             stage_progress: job.stage_progress ?? 0,
+            metadata: (job.metadata as Record<string, any>) ?? undefined,
             requested_clips: job.requested_clips,
             clip_duration: job.clip_duration,
             created_at: job.created_at,
@@ -63,11 +65,12 @@ export class JobsService {
             title: row.title,
             video_url: row.video_url ?? undefined,
             video_path: row.video_path ?? undefined,
-            thumbnail_url: row.thumbnail_url ?? undefined,
+            thumbnail_url: (row.thumbnail_url ?? undefined) || (row.video_url ? getYouTubeThumbnail(row.video_url) ?? undefined : undefined),
             duration: row.duration ?? 1800,
             status: row.status as JobStatus,
             current_stage: (row.current_stage as PipelineStage) ?? "audio",
             stage_progress: row.stage_progress ?? 0,
+            metadata: (row.metadata as Record<string, any>) ?? undefined,
             error_message: row.error_message ?? undefined,
             requested_clips: row.requested_clips,
             clip_duration: row.clip_duration,
@@ -94,6 +97,8 @@ export class JobsService {
     requestedClips: number;
   }): Promise<ProjectJob> {
     const sourceType = params.videoUrl ? "youtube" : "upload";
+    const ytThumb = params.videoUrl ? getYouTubeThumbnail(params.videoUrl) : null;
+    const initialThumb = ytThumb || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80";
 
     if (isSupabaseConfigured && supabase) {
       try {
@@ -109,7 +114,7 @@ export class JobsService {
             status: "pending",
             current_stage: "audio",
             stage_progress: 0,
-            thumbnail_url: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80",
+            thumbnail_url: initialThumb,
           })
           .select()
           .single();
@@ -121,11 +126,12 @@ export class JobsService {
             title: row.title,
             video_url: row.video_url ?? undefined,
             video_path: row.video_path ?? undefined,
-            thumbnail_url: row.thumbnail_url ?? undefined,
+            thumbnail_url: (row.thumbnail_url ?? undefined) || (row.video_url ? getYouTubeThumbnail(row.video_url) ?? undefined : undefined),
             duration: row.duration ?? 1800,
             status: row.status as JobStatus,
             current_stage: (row.current_stage as PipelineStage) ?? "audio",
             stage_progress: row.stage_progress ?? 0,
+            metadata: (row.metadata as Record<string, any>) ?? undefined,
             requested_clips: row.requested_clips,
             clip_duration: row.clip_duration,
             created_at: row.created_at,
@@ -145,7 +151,7 @@ export class JobsService {
       title: params.title,
       video_url: params.videoUrl,
       video_path: params.videoPath,
-      thumbnail_url: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=80",
+      thumbnail_url: initialThumb,
       duration: 1800,
       status: "processing",
       current_stage: "audio",

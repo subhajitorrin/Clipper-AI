@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { ProjectJob, ProcessingStageInfo, ProcessingStageId } from "@/src/types";
 import { ProcessingSteps } from "./ProcessingSteps";
 import { ProgressBar } from "./ProgressBar";
-import { formatDuration } from "@/src/lib/utils";
+import { formatDuration, getYouTubeThumbnail } from "@/src/lib/utils";
 import { Film, AlertCircle, RefreshCw, XCircle, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { fetchProjectById, updateSessionProjectStage } from "@/src/lib/api";
@@ -136,11 +136,19 @@ export function ProcessingStatus({ initialProject }: ProcessingStatusProps) {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-[#292929] bg-[#171717] p-5">
         <div className="flex items-center gap-3 min-w-0">
           <div className="relative h-14 w-22 shrink-0 overflow-hidden rounded-lg bg-[#202020] border border-[#292929]">
-            {project.thumbnail_url ? (
+            {project.thumbnail_url || getYouTubeThumbnail(project.video_url) ? (
               <img
-                src={project.thumbnail_url}
+                src={project.thumbnail_url || getYouTubeThumbnail(project.video_url)!}
                 alt={project.title}
                 className="h-full w-full object-cover"
+                onError={(e) => {
+                  // Fallback to placeholder if external image fails
+                  const target = e.currentTarget;
+                  target.style.display = "none";
+                  if (target.parentElement) {
+                    target.parentElement.innerHTML = '<div class="flex h-full w-full items-center justify-center text-[#737373]"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="m9 8 6 4-6 4Z"/></svg></div>';
+                  }
+                }}
               />
             ) : (
               <div className="flex h-full w-full items-center justify-center text-[#737373]">
@@ -214,7 +222,7 @@ export function ProcessingStatus({ initialProject }: ProcessingStatusProps) {
       {/* Processing Pipeline Stages */}
       <div className="space-y-3">
         <h3 className="text-sm font-semibold text-white">Pipeline Stages</h3>
-        <ProcessingSteps stages={stagesWithStatus} />
+        <ProcessingSteps stages={stagesWithStatus} project={project} />
       </div>
     </div>
   );

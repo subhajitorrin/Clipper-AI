@@ -1,6 +1,7 @@
 import { ProjectJob, GeneratedClip } from "@/src/types";
 import { MOCK_PROJECTS, MOCK_CLIPS } from "@/src/mock/projects";
 import { supabase, isSupabaseConfigured } from "@/src/lib/supabase/client";
+import { getYouTubeThumbnail } from "@/src/lib/utils";
 
 // In-memory store for newly created projects during the current session
 const sessionProjects: Map<string, ProjectJob> = new Map();
@@ -71,12 +72,14 @@ export async function fetchProjectById(id: string): Promise<ProjectJob | null> {
           title: data.video_url || data.video_path || "Untitled Project",
           video_url: data.video_url,
           video_path: data.video_path,
+          thumbnail_url: data.thumbnail_url || (data.video_url ? getYouTubeThumbnail(data.video_url) : undefined),
           status: data.status,
-          current_stage: data.metadata?.current_stage || "transcribing",
-          stage_progress: data.metadata?.stage_progress || 45,
-          requested_clips: data.metadata?.requested_clips || 3,
-          clip_duration: data.metadata?.clip_duration || 30,
-          duration: data.metadata?.duration || 1800,
+          current_stage: data.current_stage || data.metadata?.current_stage || "transcribing",
+          stage_progress: data.stage_progress ?? data.metadata?.stage_progress ?? 45,
+          metadata: data.metadata,
+          requested_clips: data.requested_clips || data.metadata?.requested_clips || 3,
+          clip_duration: data.clip_duration || data.metadata?.clip_duration || 30,
+          duration: data.duration || data.metadata?.duration || 1800,
           created_at: data.created_at,
           updated_at: data.updated_at,
           error_message: data.error_message,

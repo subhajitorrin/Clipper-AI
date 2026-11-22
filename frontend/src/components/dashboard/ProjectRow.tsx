@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Film, ArrowUpRight, Clock, AlertTriangle, CheckCircle2, Loader2 } from "lucide-react";
 import { ProjectJob } from "@/src/types";
-import { formatDuration } from "@/src/lib/utils";
+import { formatDuration, getYouTubeThumbnail } from "@/src/lib/utils";
 
 interface ProjectRowProps {
   project: ProjectJob;
@@ -32,9 +32,9 @@ export function ProjectRow({ project }: ProjectRowProps) {
       <div className="flex items-center gap-3 min-w-0">
         {/* Thumbnail Placeholder */}
         <div className="relative h-14 w-20 shrink-0 overflow-hidden rounded-lg bg-[#202020] border border-[#292929]">
-          {project.thumbnail_url ? (
+          {project.thumbnail_url || getYouTubeThumbnail(project.video_url) ? (
             <img
-              src={project.thumbnail_url}
+              src={project.thumbnail_url || getYouTubeThumbnail(project.video_url)!}
               alt={project.title}
               className="h-full w-full object-cover transition-transform group-hover:scale-105"
             />
