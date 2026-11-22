@@ -43,7 +43,7 @@ class SupabaseService:
             "error_message": error_message
         }).eq("id", job_id).execute()
 
-    def upload_clip(self, job_id: str, clip_file_path: str, moment: dict) -> str:
+    def upload_clip(self, job_id: str, clip_file_path: str, moment: dict, thumbnail_path: str = None) -> str:
         """Uploads clip to Supabase Storage and records clip in public.clips table."""
         filename = f"{job_id}/{os.path.basename(clip_file_path)}"
         with open(clip_file_path, "rb") as f:
@@ -58,12 +58,27 @@ class SupabaseService:
 
         output_url = self.supabase.storage.from_(settings.storage_bucket).get_public_url(filename)
 
+        thumbnail_url = None
+        if thumbnail_path and os.path.exists(thumbnail_path):
+            thumb_filename = f"{job_id}/{os.path.basename(thumbnail_path)}"
+            with open(thumbnail_path, "rb") as tf:
+                try:
+                    self.supabase.storage.from_(settings.storage_bucket).upload(
+                        path=thumb_filename,
+                        file=tf,
+                        file_options={"content-type": "image/jpeg", "upsert": "true"}
+                    )
+                    thumbnail_url = self.supabase.storage.from_(settings.storage_bucket).get_public_url(thumb_filename)
+                except Exception as e:
+                    print(f"Thumbnail upload note: {e}")
+
         # Insert clip record
         self.supabase.table("clips").insert({
             "job_id": job_id,
             "title": moment["title"],
             "start_time": moment["start_time"],
             "end_time": moment["end_time"],
+            "thumbnail_url": thumbnail_url,
             "output_url": output_url,
             "transcript": moment.get("hook_text", ""),
             "aspect_ratio": "9:16",

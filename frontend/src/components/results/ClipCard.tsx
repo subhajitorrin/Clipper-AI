@@ -2,7 +2,7 @@
 
 import { Play, Download, Clock, Scissors } from "lucide-react";
 import { GeneratedClip } from "@/src/types";
-import { formatTimestamp } from "@/src/lib/utils";
+import { formatTimestamp, cn } from "@/src/lib/utils";
 
 interface ClipCardProps {
   clip: GeneratedClip;
@@ -32,14 +32,22 @@ export function ClipCard({ clip, onPreview }: ClipCardProps) {
             src={clip.thumbnail_url}
             alt={clip.title}
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            onError={(e) => {
+              // Hide broken image so native video frame poster shows through
+              e.currentTarget.style.display = "none";
+            }}
           />
-        ) : (
-          <video
-            src={`${clip.output_url}#t=0.1`}
-            preload="metadata"
-            className="h-full w-full object-cover"
-          />
-        )}
+        ) : null}
+
+        {/* Video poster snapshot for clips without or before custom thumbnail loads */}
+        <video
+          src={`${clip.output_url}#t=0.5`}
+          preload="metadata"
+          className={cn(
+            "h-full w-full object-cover",
+            clip.thumbnail_url ? "hidden" : "block"
+          )}
+        />
 
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />

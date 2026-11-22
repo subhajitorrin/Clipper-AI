@@ -184,7 +184,7 @@ export class JobsService {
             start_time: Number(clip.start_time),
             end_time: Number(clip.end_time),
             duration: Number(clip.duration || (clip.end_time - clip.start_time)),
-            thumbnail_url: clip.thumbnail_url || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&auto=format&fit=crop&q=80",
+            thumbnail_url: clip.thumbnail_url || undefined,
             output_url: clip.output_url,
             transcript: clip.transcript ?? undefined,
             created_at: clip.created_at,

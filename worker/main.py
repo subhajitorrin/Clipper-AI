@@ -72,6 +72,7 @@ def process_job(job: dict, db: SupabaseService, transcriber: Transcriber, analyz
 
             raw_section_path = os.path.join(job_temp_dir, f"raw_clip_{i}.mp4")
             vertical_clip_path = os.path.join(job_temp_dir, f"clip_{i}.mp4")
+            thumbnail_clip_path = os.path.join(job_temp_dir, f"thumb_{i}.jpg")
 
             # Zero-storage: only download the exact chunk
             Downloader.download_section(video_url, moment["start_time"], moment["end_time"], raw_section_path)
@@ -87,6 +88,12 @@ def process_job(job: dict, db: SupabaseService, transcriber: Transcriber, analyz
             })
             VideoEditor.render_vertical_clip(raw_section_path, vertical_clip_path)
 
+            # Generate high-quality 9:16 video thumbnail frame
+            try:
+                VideoEditor.extract_thumbnail(vertical_clip_path, thumbnail_clip_path, timestamp=1.0)
+            except Exception as te:
+                print(f"Thumbnail generation warning: {te}")
+
             # Upload clip and record to Supabase
             progress_val = int(75 + ((i + 0.9) / total_moments) * 20)
             db.update_progress(job_id, "rendering", progress_val, metadata={
@@ -96,7 +103,7 @@ def process_job(job: dict, db: SupabaseService, transcriber: Transcriber, analyz
                 "current_clip_stage": "uploading",
                 "step_description": f"Saving & uploading clip {clip_num} of {total_moments}..."
             })
-            db.upload_clip(job_id, vertical_clip_path, moment)
+            db.upload_clip(job_id, vertical_clip_path, moment, thumbnail_path=thumbnail_clip_path)
 
         db.complete_job(job_id)
         print(f"🎉 Job {job_id} completed successfully!")
