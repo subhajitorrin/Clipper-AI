@@ -147,7 +147,7 @@ export function ProcessingStatus({ initialProject }: ProcessingStatusProps) {
       <div>
         <h2 className="text-2xl font-bold tracking-tight text-white">Processing Your Video</h2>
         <p className="text-sm text-[#737373] mt-1">
-          ClipForge is analyzing transcripts, identifying viral segments and generating 9:16 vertical shorts.
+          Clipper AI is analyzing transcripts, identifying viral segments and generating 9:16 vertical shorts.
         </p>
       </div>
 

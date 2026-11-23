@@ -1,6 +1,6 @@
-# ClipForge AI — Landing Page
+# Clipper AI — Landing Page
 
-A modern, responsive, zero-dependency landing page for **ClipForge AI** showcasing the autonomous video repurposing pipeline and live demo.
+A modern, responsive, zero-dependency landing page for **Clipper AI** showcasing the autonomous video repurposing pipeline and live demo.
 
 ## Features
 - **Modern Dark UI**: Designed with Tailwind CSS and Plus Jakarta Sans typography.

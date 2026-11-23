@@ -1,6 +1,13 @@
-# ClipForge AI 🎬⚡
+<p align="center">
+  <img src="logo.png" alt="Clipper AI Logo" width="120" height="120" style="border-radius: 26px; box-shadow: 0 10px 30px rgba(16, 185, 129, 0.25);" />
+</p>
 
-> **Autonomous AI Video Repurposing Pipeline** — Transform long-form podcasts and YouTube videos into high-engagement, viral vertical shorts (9:16) with automated speech-to-text, LLM moment detection, and computer vision speaker tracking.
+<h1 align="center">Clipper AI 🎬⚡</h1>
+
+<p align="center">
+  <b>Autonomous AI Video Repurposing Pipeline</b><br />
+  Transform long-form podcasts and YouTube videos into high-engagement, viral vertical shorts (9:16) with automated speech-to-text, LLM moment detection, and computer vision speaker tracking.
+</p>
 
 [![Next.js](https://img.shields.io/badge/Next.js-16.4-black?style=flat&logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.3-blue?style=flat&logo=react)](https://react.dev/)
@@ -31,9 +38,9 @@
 
 ## 🌟 Overview
 
-**ClipForge AI** is a production-ready, full-stack video automation engine designed to solve the content creator's bottleneck: converting 1–2 hour long-form videos into viral short-form clips for **TikTok, YouTube Shorts, and Instagram Reels**.
+**Clipper AI** is a production-ready, full-stack video automation engine designed to solve the content creator's bottleneck: converting 1–2 hour long-form videos into viral short-form clips for **TikTok, YouTube Shorts, and Instagram Reels**.
 
-Instead of simple static cropping or random cuts, ClipForge AI implements an end-to-end distributed system:
+Instead of simple static cropping or random cuts, Clipper AI implements an end-to-end distributed system:
 1. **Zero-Storage Audio Extraction**: Downloads lightweight audio streams directly from source URLs.
 2. **Deepgram Nova-2 Transcription**: Transcribes spoken dialogue with word-level timestamps in seconds.
 3. **LLM-Powered Semantic Analysis**: Evaluates conversational hooks, viral retention potential, and semantic boundaries using OpenAI `gpt-4o-mini`.

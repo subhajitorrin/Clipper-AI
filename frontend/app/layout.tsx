@@ -2,8 +2,11 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "ClipForge AI — Short-form Vertical Video Generator",
+  title: "Clipper AI — Short-form Vertical Video Generator",
   description: "Turn long-form videos into engaging short-form vertical clips automatically.",
+  icons: {
+    icon: "/logo.png",
+  },
 };
 
 export default function RootLayout({

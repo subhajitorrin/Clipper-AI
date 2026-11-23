@@ -54,11 +54,9 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
       >
         {/* Brand Header */}
         <div className="flex h-16 items-center gap-3 border-b border-[#292929] px-6">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white text-black">
-            <Scissors className="h-4 w-4" />
-          </div>
+          <img src="/logo.png" alt="Clipper AI Logo" className="h-8 w-8 rounded-lg object-contain shadow-md" />
           <div className="flex flex-col">
-            <span className="text-sm font-semibold tracking-tight text-white">ClipForge AI</span>
+            <span className="text-sm font-semibold tracking-tight text-white">Clipper AI</span>
             <span className="text-[11px] text-[#737373]">Shorts Studio</span>
           </div>
         </div>
