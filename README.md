@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="logo.png" alt="Clipper AI Logo" width="120" height="120" style="border-radius: 26px; box-shadow: 0 10px 30px rgba(16, 185, 129, 0.25);" />
-</p>
-
 <h1 align="center">Clipper AI 🎬⚡</h1>
 
 <p align="center">
@@ -25,17 +21,11 @@
 ## 📺 Demo Walkthrough
 
 <p align="center">
-  <video src="https://pub-54b53270ca084c3cb6121e9adb5858a1.r2.dev/demo.mp4" controls="controls" width="100%" style="max-height: 520px; border-radius: 12px; box-shadow: 0 12px 36px rgba(0,0,0,0.4);">
-    <a href="https://pub-54b53270ca084c3cb6121e9adb5858a1.r2.dev/demo.mp4">
-      <img src="demo.gif" alt="Clipper AI Demo Walkthrough" width="100%" style="max-height: 520px; border-radius: 12px; box-shadow: 0 12px 36px rgba(0,0,0,0.4);" />
-    </a>
-  </video>
+  <img src="demo.gif" alt="Clipper AI Demo Walkthrough" width="100%" style="border-radius: 12px; box-shadow: 0 12px 36px rgba(0,0,0,0.4);" />
 </p>
 
-https://pub-54b53270ca084c3cb6121e9adb5858a1.r2.dev/demo.mp4
-
 <p align="center">
-  🎬 <a href="https://pub-54b53270ca084c3cb6121e9adb5858a1.r2.dev/demo.mp4" target="_blank"><b>Watch Full-Resolution Direct Demo Video (MP4)</b></a></a>
+  🎬 <a href="https://pub-54b53270ca084c3cb6121e9adb5858a1.r2.dev/demo.mp4" target="_blank"><b>Watch Full-Resolution Direct Demo Video (MP4)</b></a> &nbsp;•&nbsp; 🌐 <a href="landing-page/index.html" target="_blank"><b>Open Interactive Landing Page</b></a>
 </p>
 
 ---
