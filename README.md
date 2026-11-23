@@ -287,8 +287,7 @@ The worker will continuously poll for `pending` jobs, execute the pipeline, and 
 
 ## 👤 Author & Contact
 
-Developed by **[Your Name]**  
-- **Portfolio / Website**: [yourportfolio.com](https://yourportfolio.com)
-- **LinkedIn**: [linkedin.com/in/yourprofile](https://linkedin.com)
-- **GitHub**: [@yourusername](https://github.com/yourusername)
-- **Email**: your.email@example.com
+Developed by **Subhajit Ghosh**  
+- **Website**: [orrin.site](https://orrin.site)
+- **LinkedIn**: [linkedin.com/in/subhajitorrin](https://www.linkedin.com/in/subhajitorrin/)
+- **GitHub**: [@subhajitorrin](https://github.com/subhajitorrin)

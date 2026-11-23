@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ClipForge AI — Autonomous AI Video Repurposing Pipeline</title>
+  <meta name="description" content="Transform long-form podcasts and YouTube videos into high-engagement, viral vertical shorts with AI speaker tracking and dynamic captions." />
+  
+  <!-- Inter & Plus Jakarta Sans Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+            mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace']
+          },
+          colors: {
+            brand: {
+              50: '#f5f3ff',
+              100: '#ede9fe',
+              500: '#8b5cf6',
+              600: '#7c3aed',
+              700: '#6d28d9',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Glow utilities */
+    .glow-purple {
+      background: radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.18) 0%, rgba(15, 23, 42, 0) 70%);
+    }
+    .badge-shimmer {
+      background: linear-gradient(90deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0.03) 100%);
+      background-size: 200% 100%;
+      animation: shimmer 4s infinite linear;
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+  </style>
+</head>
+<body class="bg-[#0B0F19] text-slate-100 antialiased selection:bg-purple-600 selection:text-white min-h-screen flex flex-col">
+
+  <!-- Header / Navigation -->
+  <header class="sticky top-0 z-50 backdrop-blur-md bg-[#0B0F19]/80 border-b border-slate-800/80">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-purple-500/25">
+          <span class="text-lg">🎬</span>
+        </div>
+        <span class="font-bold text-lg tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">
+          ClipForge <span class="text-purple-400 font-extrabold">AI</span>
+        </span>
+      </div>
+
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-400">
+        <a href="#demo" class="hover:text-purple-400 transition-colors">Live Demo</a>
+        <a href="#features" class="hover:text-purple-400 transition-colors">Features</a>
+        <a href="#pipeline" class="hover:text-purple-400 transition-colors">Architecture</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a 
+          href="https://github.com/subhajitorrin" 
+          target="_blank"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800/80 hover:bg-slate-750 border border-slate-700/80 hover:border-slate-600 text-sm font-semibold transition shadow-sm"
+        >
+          <svg class="w-4 h-4 fill-current text-slate-300" viewBox="0 0 24 24">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          <span>GitHub</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1">
+    <!-- Hero Section -->
+    <section class="relative pt-20 pb-16 md:pt-28 md:pb-20 overflow-hidden glow-purple">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 text-center">
+        <!-- Badge -->
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-purple-500/30 bg-purple-500/10 text-purple-300 text-xs font-semibold mb-6 badge-shimmer">
+          <span class="flex h-2 w-2 rounded-full bg-purple-400 animate-pulse"></span>
+          Autonomous Media Engineering Pipeline
+        </div>
+
+        <h1 class="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white leading-[1.1] mb-6">
+          Turn hours of video into <br class="hidden sm:block" />
+          <span class="bg-gradient-to-r from-purple-400 via-indigo-300 to-pink-400 bg-clip-text text-transparent">
+            viral 9:16 vertical shorts
+          </span>
+        </h1>
+
+        <p class="max-w-2xl mx-auto text-base sm:text-lg text-slate-400 mb-10 leading-relaxed font-normal">
+          Zero-waste streaming audio extraction, word-level Nova-2 transcription, 
+          LLM-powered hook detection, and computer vision speaker auto-framing.
+        </p>
+
+        <!-- CTAs -->
+        <div class="flex flex-wrap items-center justify-center gap-4">
+          <a 
+            href="#demo"
+            class="px-6 py-3.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold text-sm shadow-lg shadow-purple-600/30 hover:shadow-purple-600/50 transition-all flex items-center gap-2 group"
+          >
+            <span>Watch Live Demo</span>
+            <svg class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+            </svg>
+          </a>
+          <a 
+            href="#pipeline"
+            class="px-6 py-3.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-slate-300 font-semibold text-sm border border-slate-700/80 transition-colors"
+          >
+            Explore Architecture
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Demo Video Showcase Section -->
+    <section id="demo" class="py-12 sm:py-16">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6">
+        <div class="text-center mb-8">
+          <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">Interactive Pipeline Demo</h2>
+          <p class="text-sm sm:text-base text-slate-400 mt-2">See ClipForge automatically detect speakers, burn animated captions, and produce 1080x1920 clips.</p>
+        </div>
+
+        <!-- Video Player Wrapper with gradient frame -->
+        <div class="relative p-1 rounded-2xl bg-gradient-to-b from-purple-500/30 via-slate-800 to-slate-900 shadow-2xl shadow-purple-950/40">
+          <div class="relative rounded-xl overflow-hidden bg-black aspect-video flex items-center justify-center">
+            <video 
+              controls 
+              playsinline
+              preload="metadata"
+              poster="https://pub-54b53270ca084c3cb6121e9adb5858a1.r2.dev/demo.mp4"
+              class="w-full h-full object-contain"
+            >
+              <source src="https://pub-54b53270ca084c3cb6121e9adb5858a1.r2.dev/demo.mp4" type="video/mp4" />
+              Your browser does not support HTML5 video tag.
+            </video>
+          </div>
+        </div>
+
+        <div class="mt-4 flex flex-wrap items-center justify-between text-xs text-slate-400 px-2 gap-2">
+          <span class="flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            Real-time preview from production worker
+          </span>
+          <a 
+            href="https://pub-54b53270ca084c3cb6121e9adb5858a1.r2.dev/demo.mp4" 
+            target="_blank"
+            class="text-purple-400 hover:text-purple-300 transition-colors font-medium flex items-center gap-1"
+          >
+            Direct Video Download &rarr;
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key Feature Cards -->
+    <section id="features" class="py-16 sm:py-24 border-t border-slate-800/80 bg-slate-950/40">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <h2 class="text-xs uppercase font-bold tracking-widest text-purple-400 mb-2">Capabilities</h2>
+          <p class="text-3xl font-extrabold text-white">Engineered for speed, scale & quality</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Card 1 -->
+          <div class="p-6 rounded-2xl bg-slate-900/60 border border-slate-800/90 hover:border-purple-500/40 transition-all hover:-translate-y-1 group">
+            <div class="w-12 h-12 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-xl mb-5 group-hover:scale-110 transition-transform">
+              👁️
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Smart Speaker Centering</h3>
+            <p class="text-sm text-slate-400 leading-relaxed">
+              OpenCV YuNet ONNX deep neural network detects active faces and dynamically calculates crop coordinates to center speakers in standard 9:16.
+            </p>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="p-6 rounded-2xl bg-slate-900/60 border border-slate-800/90 hover:border-purple-500/40 transition-all hover:-translate-y-1 group">
+            <div class="w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center text-xl mb-5 group-hover:scale-110 transition-transform">
+              ⚡
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Zero-Storage Extraction</h3>
+            <p class="text-sm text-slate-400 leading-relaxed">
+              Never downloads multi-gigabyte videos upfront. Streams lightweight audio first, then only fetches target byte-range chunks for approved clips.
+            </p>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="p-6 rounded-2xl bg-slate-900/60 border border-slate-800/90 hover:border-purple-500/40 transition-all hover:-translate-y-1 group">
+            <div class="w-12 h-12 rounded-xl bg-pink-500/10 text-pink-400 flex items-center justify-center text-xl mb-5 group-hover:scale-110 transition-transform">
+              ✨
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Word-by-Word Captions</h3>
+            <p class="text-sm text-slate-400 leading-relaxed">
+              Deepgram Nova-2 millisecond timestamps power karaoke-style animated captions burnt directly via custom SubStation Alpha (.ass) scripts.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pipeline Architecture -->
+    <section id="pipeline" class="py-16 sm:py-24 border-t border-slate-800/80">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <h2 class="text-xs uppercase font-bold tracking-widest text-purple-400 mb-2">Workflow</h2>
+          <p class="text-3xl font-extrabold text-white">How ClipForge Works</p>
+        </div>
+
+        <div class="relative">
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <!-- Step 1 -->
+            <div class="p-5 rounded-xl bg-slate-900/40 border border-slate-800 relative">
+              <span class="text-xs font-mono font-bold text-purple-400">01</span>
+              <h4 class="text-base font-bold text-white mt-2 mb-1">Audio Stream</h4>
+              <p class="text-xs text-slate-400 leading-relaxed">Lightweight audio extraction from YouTube/VOD via yt-dlp.</p>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="p-5 rounded-xl bg-slate-900/40 border border-slate-800 relative">
+              <span class="text-xs font-mono font-bold text-indigo-400">02</span>
+              <h4 class="text-base font-bold text-white mt-2 mb-1">Speech & Timestamps</h4>
+              <p class="text-xs text-slate-400 leading-relaxed">Deepgram Nova-2 transcribes speech with word-level ms precision.</p>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="p-5 rounded-xl bg-slate-900/40 border border-slate-800 relative">
+              <span class="text-xs font-mono font-bold text-pink-400">03</span>
+              <h4 class="text-base font-bold text-white mt-2 mb-1">LLM Moment Selection</h4>
+              <p class="text-xs text-slate-400 leading-relaxed">gpt-4o-mini scores narrative hooks and viral potential.</p>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="p-5 rounded-xl bg-slate-900/40 border border-slate-800 relative">
+              <span class="text-xs font-mono font-bold text-emerald-400">04</span>
+              <h4 class="text-base font-bold text-white mt-2 mb-1">CV & FFmpeg Render</h4>
+              <p class="text-xs text-slate-400 leading-relaxed">YuNet centers speaker, FFmpeg renders 1080x1920 with burnt captions.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tech Stack Badges -->
+        <div class="mt-16 pt-8 border-t border-slate-800/80 flex flex-wrap items-center justify-center gap-3 text-xs font-mono text-slate-400">
+          <span class="px-3 py-1 rounded-md bg-slate-800/70 border border-slate-700">Next.js 16</span>
+          <span class="px-3 py-1 rounded-md bg-slate-800/70 border border-slate-700">Python 3.11</span>
+          <span class="px-3 py-1 rounded-md bg-slate-800/70 border border-slate-700">OpenCV YuNet</span>
+          <span class="px-3 py-1 rounded-md bg-slate-800/70 border border-slate-700">FFmpeg 6+</span>
+          <span class="px-3 py-1 rounded-md bg-slate-800/70 border border-slate-700">Deepgram Nova-2</span>
+          <span class="px-3 py-1 rounded-md bg-slate-800/70 border border-slate-700">Supabase (PostgreSQL)</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800/80 bg-[#070A11] py-8 text-center text-xs text-slate-500">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p>&copy; ClipForge AI. Autonomous video repurposing architecture.</p>
+      <div class="flex items-center gap-6">
+        <a href="#demo" class="hover:text-slate-300 transition-colors">Demo</a>
+        <a href="#features" class="hover:text-slate-300 transition-colors">Features</a>
+        <a href="#pipeline" class="hover:text-slate-300 transition-colors">Architecture</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
