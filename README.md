@@ -25,13 +25,13 @@
 ## 📺 Demo Walkthrough
 
 <p align="center">
-  <video src="https://pub-54b53270ca084c3cb6121e9adb5858a1.r2.dev/demo.mp4" controls="controls" width="100%" style="max-height: 520px; border-radius: 8px;">
-    Your browser does not support the video tag.
-  </video>
+  <a href="https://pub-54b53270ca084c3cb6121e9adb5858a1.r2.dev/demo.mp4" target="_blank">
+    <img src="demo.gif" alt="Clipper AI Demo Walkthrough" width="100%" style="max-height: 520px; border-radius: 12px; box-shadow: 0 12px 36px rgba(0,0,0,0.4);" />
+  </a>
 </p>
 
 <p align="center">
-  🎬 <a href="https://pub-54b53270ca084c3cb6121e9adb5858a1.r2.dev/demo.mp4" target="_blank"><b>Watch / Download Direct Demo Video (MP4)</b></a>
+  🎬 <a href="https://pub-54b53270ca084c3cb6121e9adb5858a1.r2.dev/demo.mp4" target="_blank"><b>Watch Full-Resolution Direct Demo Video (MP4)</b></a> &nbsp;•&nbsp; 🌐 <a href="landing-page/index.html" target="_blank"><b>Open Interactive Landing Page</b></a>
 </p>
 
 ---
