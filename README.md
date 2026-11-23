@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="logo.png" alt="Clipper AI Logo" width="120" height="120" style="border-radius: 26px; box-shadow: 0 10px 30px rgba(16, 185, 129, 0.25);" />
+</p>
+
 <h1 align="center">Clipper AI 🎬⚡</h1>
 
 <p align="center">
@@ -21,11 +25,19 @@
 ## 📺 Demo Walkthrough
 
 <p align="center">
-  <img src="demo.gif" alt="Clipper AI Demo Walkthrough" width="100%" style="border-radius: 12px; box-shadow: 0 12px 36px rgba(0,0,0,0.4);" />
+  <a href="https://pub-54b53270ca084c3cb6121e9adb5858a1.r2.dev/demo.mp4" target="_blank">
+    <img src="demo.gif" alt="Clipper AI Demo Walkthrough" width="100%" style="border-radius: 12px; box-shadow: 0 12px 36px rgba(0,0,0,0.4);" />
+  </a>
 </p>
 
 <p align="center">
-  🎬 <a href="https://pub-54b53270ca084c3cb6121e9adb5858a1.r2.dev/demo.mp4" target="_blank"><b>Watch Full-Resolution Direct Demo Video (MP4)</b></a> &nbsp;•&nbsp; 🌐 <a href="landing-page/index.html" target="_blank"><b>Open Interactive Landing Page</b></a>
+  <a href="https://pub-54b53270ca084c3cb6121e9adb5858a1.r2.dev/demo.mp4" target="_blank">
+    <img src="https://img.shields.io/badge/▶_View_Full_Demo-10B981?style=for-the-badge&logo=cloudflare&logoColor=white" alt="View Full Demo" height="38" />
+  </a>
+  &nbsp;&nbsp;
+  <a href="landing-page/index.html" target="_blank">
+    <img src="https://img.shields.io/badge/🌐_View_Landing_Page-1F2937?style=for-the-badge" alt="View Landing Page" height="38" />
+  </a>
 </p>
 
 ---
