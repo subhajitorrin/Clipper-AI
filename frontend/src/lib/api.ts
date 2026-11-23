@@ -1,5 +1,4 @@
 import { ProjectJob, GeneratedClip } from "@/src/types";
-import { MOCK_PROJECTS, MOCK_CLIPS } from "@/src/mock/projects";
 import { supabase, isSupabaseConfigured } from "@/src/lib/supabase/client";
 import { getYouTubeThumbnail } from "@/src/lib/utils";
 
@@ -7,6 +6,20 @@ import { getYouTubeThumbnail } from "@/src/lib/utils";
 const sessionProjects: Map<string, ProjectJob> = new Map();
 
 export async function fetchProjects(): Promise<ProjectJob[]> {
+  // Always attempt fetching through server API first (which has full DB access)
+  try {
+    const res = await fetch("/api/jobs", { cache: "no-store" });
+    if (res.ok) {
+      const json = await res.json();
+      if (json.success && Array.isArray(json.data)) {
+        return json.data;
+      }
+    }
+  } catch (err) {
+    console.error("fetchProjects via API error:", err);
+  }
+
+  // Fallback to direct client-side Supabase if configured
   if (isSupabaseConfigured && supabase) {
     try {
       const { data, error } = await supabase
@@ -14,34 +27,36 @@ export async function fetchProjects(): Promise<ProjectJob[]> {
         .select("*, clips(count)")
         .order("created_at", { ascending: false });
 
-      if (!error && data && data.length > 0) {
-        return data.map((job) => ({
+      if (!error && data) {
+        return data.map((job: any) => ({
           id: job.id,
-          title: job.video_url || job.video_path || "Untitled Video",
+          title: job.title || job.video_url || job.video_path || "Untitled Video",
           video_url: job.video_url,
           video_path: job.video_path,
+          thumbnail_url: job.thumbnail_url || (job.video_url ? getYouTubeThumbnail(job.video_url) : undefined),
           status: job.status,
-          duration: job.metadata?.duration || 1800,
-          requested_clips: job.metadata?.requested_clips || 3,
-          clip_duration: job.metadata?.clip_duration || 30,
+          current_stage: job.current_stage || "audio",
+          stage_progress: job.stage_progress ?? 0,
+          duration: job.duration || 1800,
+          requested_clips: job.requested_clips || 3,
+          clip_duration: job.clip_duration || 30,
           created_at: job.created_at,
           updated_at: job.updated_at,
           clip_count: job.clips?.[0]?.count || 0,
         }));
       }
     } catch {
-      // Gracefully fall through to mock data
+      // Ignore
     }
   }
 
-  const sessionList = Array.from(sessionProjects.values());
-  return [...sessionList, ...MOCK_PROJECTS];
+  return Array.from(sessionProjects.values());
 }
 
 export async function fetchProjectById(id: string): Promise<ProjectJob | null> {
   // Check API route first for real Supabase job
   try {
-    const res = await fetch(`/api/jobs/${id}`);
+    const res = await fetch(`/api/jobs/${id}`, { cache: "no-store" });
     if (res.ok) {
       const json = await res.json();
       if (json.success && json.data) {
@@ -69,13 +84,13 @@ export async function fetchProjectById(id: string): Promise<ProjectJob | null> {
       if (!error && data) {
         return {
           id: data.id,
-          title: data.video_url || data.video_path || "Untitled Project",
+          title: data.title || data.video_url || data.video_path || "Untitled Project",
           video_url: data.video_url,
           video_path: data.video_path,
           thumbnail_url: data.thumbnail_url || (data.video_url ? getYouTubeThumbnail(data.video_url) : undefined),
           status: data.status,
-          current_stage: data.current_stage || data.metadata?.current_stage || "transcribing",
-          stage_progress: data.stage_progress ?? data.metadata?.stage_progress ?? 45,
+          current_stage: data.current_stage || data.metadata?.current_stage || "audio",
+          stage_progress: data.stage_progress ?? data.metadata?.stage_progress ?? 0,
           metadata: data.metadata,
           requested_clips: data.requested_clips || data.metadata?.requested_clips || 3,
           clip_duration: data.clip_duration || data.metadata?.clip_duration || 30,
@@ -86,16 +101,16 @@ export async function fetchProjectById(id: string): Promise<ProjectJob | null> {
         };
       }
     } catch {
-      // Fall through to mock
+      // Fall through
     }
   }
 
-  return MOCK_PROJECTS.find((p) => p.id === id) || null;
+  return null;
 }
 
 export async function fetchClipsByJobId(jobId: string): Promise<GeneratedClip[]> {
   try {
-    const res = await fetch(`/api/jobs/${jobId}`);
+    const res = await fetch(`/api/jobs/${jobId}`, { cache: "no-store" });
     if (res.ok) {
       const json = await res.json();
       if (json.success && json.data && json.data.clips) {
@@ -114,7 +129,7 @@ export async function fetchClipsByJobId(jobId: string): Promise<GeneratedClip[]>
         .eq("job_id", jobId)
         .order("start_time", { ascending: true });
 
-      if (!error && data && data.length > 0) {
+      if (!error && data) {
         return data.map((c) => ({
           id: c.id,
           job_id: c.job_id,
@@ -122,8 +137,8 @@ export async function fetchClipsByJobId(jobId: string): Promise<GeneratedClip[]>
           duration: Math.round(Number(c.end_time) - Number(c.start_time)),
           start_time: Number(c.start_time),
           end_time: Number(c.end_time),
-          thumbnail_url: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&auto=format&fit=crop&q=80",
-          output_url: c.output_url || "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+          thumbnail_url: c.thumbnail_url || undefined,
+          output_url: c.output_url,
           transcript: c.transcript,
           created_at: c.created_at,
         }));
@@ -133,7 +148,7 @@ export async function fetchClipsByJobId(jobId: string): Promise<GeneratedClip[]>
     }
   }
 
-  return MOCK_CLIPS[jobId] || MOCK_CLIPS["proj-101"] || [];
+  return [];
 }
 
 export async function createProjectJob(params: {
