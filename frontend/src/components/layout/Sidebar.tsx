@@ -97,7 +97,6 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             </div>
             <div className="flex flex-col min-w-0 flex-1">
               <span className="truncate text-xs font-medium text-white">Creator Account</span>
-              <span className="truncate text-[11px] text-[#737373]">Free MVP Plan</span>
             </div>
           </div>
         </div>
