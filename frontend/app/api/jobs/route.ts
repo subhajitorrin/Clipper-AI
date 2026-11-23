@@ -35,8 +35,8 @@ export async function POST(request: Request) {
       title,
       videoUrl,
       videoPath,
-      clipDuration: clipDuration || 45,
-      requestedClips: requestedClips || 3,
+      clipDuration: typeof clipDuration === "number" ? clipDuration : 45,
+      requestedClips: typeof requestedClips === "number" ? requestedClips : 3,
     });
 
     return NextResponse.json({ success: true, data: newJob }, { status: 201 });

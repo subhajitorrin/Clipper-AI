@@ -12,8 +12,8 @@ export interface ProjectJob {
   stage_progress?: number; // 0 to 100
   metadata?: Record<string, any>;
   error_message?: string;
-  requested_clips: number;
-  clip_duration: number; // 30, 45, or 60 seconds
+  requested_clips: number; // 0 for Auto, or 1, 3, 5, 10
+  clip_duration: number; // 0 for Auto, or 15, 30, 45, 60 seconds
   created_at: string;
   updated_at: string;
   clip_count?: number;

@@ -9,13 +9,21 @@ class FaceTracker:
         self.yunet_path = yunet_path if os.path.exists(yunet_path) else None
         
         # Fallback to Haar Cascades (frontal + profile for angled podcast speakers)
-        frontal_path = cv2.data.haarcascades + "haarcascade_frontalface_alt2.xml"
-        if not os.path.exists(frontal_path):
-            frontal_path = cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
-        profile_path = cv2.data.haarcascades + "haarcascade_profileface.xml"
-        
-        self.frontal_cascade = cv2.CascadeClassifier(frontal_path)
-        self.profile_cascade = cv2.CascadeClassifier(profile_path) if os.path.exists(profile_path) else None
+        self.frontal_cascade = None
+        self.profile_cascade = None
+        try:
+            if hasattr(cv2, 'data') and hasattr(cv2.data, 'haarcascades') and hasattr(cv2, 'CascadeClassifier'):
+                frontal_path = cv2.data.haarcascades + "haarcascade_frontalface_alt2.xml"
+                if not os.path.exists(frontal_path):
+                    frontal_path = cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
+                profile_path = cv2.data.haarcascades + "haarcascade_profileface.xml"
+                
+                if os.path.exists(frontal_path):
+                    self.frontal_cascade = cv2.CascadeClassifier(frontal_path)
+                if os.path.exists(profile_path):
+                    self.profile_cascade = cv2.CascadeClassifier(profile_path)
+        except Exception as e:
+            print(f"  [FaceTracker] Haar cascade initialization notice: {e}")
 
     def _detect_faces_yunet(self, frame_small, orig_w, orig_h, scale_w, scale_h):
         """Detect faces using YuNet neural network."""

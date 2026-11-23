@@ -2,14 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ProjectJob, ProcessingStageInfo, ProcessingStageId } from "@/src/types";
+import { ProjectJob, ProcessingStageInfo, ProcessingStageId, GeneratedClip } from "@/src/types";
 import { ProcessingSteps } from "./ProcessingSteps";
 import { ProgressBar } from "./ProgressBar";
 import { formatDuration, getYouTubeThumbnail } from "@/src/lib/utils";
-import { Film, AlertCircle, RefreshCw, XCircle, ArrowLeft } from "lucide-react";
+import { Film, AlertCircle, RefreshCw, XCircle, ArrowLeft, Play, ExternalLink, Sparkles } from "lucide-react";
 import Link from "next/link";
-import { fetchProjectById, updateSessionProjectStage } from "@/src/lib/api";
+import { fetchProjectById, fetchClipsByJobId, updateSessionProjectStage } from "@/src/lib/api";
 import { cn } from "@/src/lib/utils";
+import { ClipCard } from "@/src/components/results/ClipCard";
+import { ClipPreview } from "@/src/components/results/ClipPreview";
 
 interface ProcessingStatusProps {
   initialProject: ProjectJob;
@@ -41,9 +43,11 @@ const DEFAULT_STAGES: { id: ProcessingStageId; label: string; description: strin
 export function ProcessingStatus({ initialProject }: ProcessingStatusProps) {
   const router = useRouter();
   const [project, setProject] = useState<ProjectJob>(initialProject);
+  const [readyClips, setReadyClips] = useState<GeneratedClip[]>([]);
+  const [selectedPreviewClip, setSelectedPreviewClip] = useState<GeneratedClip | null>(null);
   const [isRetrying, setIsRetrying] = useState(false);
 
-  // Poll / Listen for updates (supports mock transitions and live backend)
+  // Poll / Listen for updates and live ready clips
   useEffect(() => {
     if (project.status === "completed") {
       const timer = setTimeout(() => {
@@ -52,15 +56,19 @@ export function ProcessingStatus({ initialProject }: ProcessingStatusProps) {
       return () => clearTimeout(timer);
     }
 
-    if (project.status === "failed") {
-      return;
-    }
-
-    // Progression updates: poll the real job status from Supabase
+    // Progression updates: poll the real job status and any newly finished clips from Supabase
     const interval = setInterval(async () => {
       if (!project?.id) return;
 
-      const fresh = await fetchProjectById(project.id);
+      const [fresh, clips] = await Promise.all([
+        fetchProjectById(project.id),
+        fetchClipsByJobId(project.id),
+      ]);
+
+      if (clips && clips.length > 0) {
+        setReadyClips(clips);
+      }
+
       if (fresh) {
         setProject(fresh);
         if (fresh.status === "completed") {
@@ -72,7 +80,18 @@ export function ProcessingStatus({ initialProject }: ProcessingStatusProps) {
     }, 2000);
 
     return () => clearInterval(interval);
-  }, [project.id, router]);
+  }, [project.id, project.status, router]);
+
+  // Initial fetch of any already processed clips
+  useEffect(() => {
+    if (project.id) {
+      fetchClipsByJobId(project.id).then((clips) => {
+        if (clips && clips.length > 0) {
+          setReadyClips(clips);
+        }
+      });
+    }
+  }, [project.id]);
 
   // Compute stage statuses based on current state
   const stageOrder: ProcessingStageId[] = ["audio", "transcribing", "moments", "rendering"];
@@ -112,7 +131,7 @@ export function ProcessingStatus({ initialProject }: ProcessingStatusProps) {
   };
 
   return (
-    <div className="space-y-6 max-w-3xl mx-auto">
+    <div className="space-y-6 max-w-4xl mx-auto">
       {/* Navigation */}
       <div>
         <Link
@@ -142,7 +161,6 @@ export function ProcessingStatus({ initialProject }: ProcessingStatusProps) {
                 alt={project.title}
                 className="h-full w-full object-cover"
                 onError={(e) => {
-                  // Fallback to placeholder if external image fails
                   const target = e.currentTarget;
                   target.style.display = "none";
                   if (target.parentElement) {
@@ -161,19 +179,24 @@ export function ProcessingStatus({ initialProject }: ProcessingStatusProps) {
             <div className="flex items-center gap-2 text-xs text-[#737373] mt-1">
               <span>{formatDuration(project.duration || 1800)} total length</span>
               <span>•</span>
-              <span>{project.requested_clips} clips requested</span>
+              <span>
+                {project.requested_clips === 0 ? "Auto (Max Viral)" : `${project.requested_clips} clips`}
+              </span>
               <span>•</span>
-              <span>{project.clip_duration}s duration</span>
+              <span>
+                {project.clip_duration === 0 ? "Auto Duration (AI Pick)" : `${project.clip_duration}s duration`}
+              </span>
             </div>
           </div>
         </div>
 
-        {project.status === "completed" && (
+        {readyClips.length > 0 && (
           <Link
             href={`/results/${project.id}`}
-            className="rounded-lg bg-white px-4 py-2 text-xs font-semibold text-black hover:bg-[#E5E5E5] transition-colors shrink-0 text-center"
+            className="rounded-lg bg-white px-4 py-2 text-xs font-semibold text-black hover:bg-[#E5E5E5] transition-colors shrink-0 text-center flex items-center gap-1.5 cursor-pointer"
           >
-            View Results
+            <Sparkles className="h-3.5 w-3.5" />
+            <span>View {readyClips.length} Ready Clip{readyClips.length > 1 ? "s" : ""}</span>
           </Link>
         )}
       </div>
@@ -183,10 +206,19 @@ export function ProcessingStatus({ initialProject }: ProcessingStatusProps) {
         <ProgressBar progress={overallProgress} />
 
         {project.status === "processing" && (
-          <p className="text-xs text-[#737373] flex items-center justify-between">
-            <span>Current stage: <strong className="text-white capitalize">{stagesWithStatus.find(s => s.status === 'processing')?.label || 'Preparing'}</strong></span>
-            <span>Estimated time remaining: ~2 mins</span>
-          </p>
+          <div className="text-xs text-[#737373] flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+            <span>
+              Current stage: <strong className="text-white capitalize">{stagesWithStatus.find(s => s.status === 'processing')?.label || 'Preparing'}</strong>
+              {project.metadata?.step_description && (
+                <span className="text-[#A3A3A3] ml-2">({project.metadata.step_description})</span>
+              )}
+            </span>
+            {readyClips.length > 0 && (
+              <span className="text-emerald-400 font-medium">
+                ⚡ {readyClips.length} clip{readyClips.length > 1 ? "s" : ""} ready to watch below
+              </span>
+            )}
+          </div>
         )}
 
         {project.status === "completed" && (
@@ -204,6 +236,11 @@ export function ProcessingStatus({ initialProject }: ProcessingStatusProps) {
             <p className="text-[#737373]">
               {project.error_message || "The video processing pipeline encountered an unexpected error."}
             </p>
+            {readyClips.length > 0 && (
+              <p className="text-xs text-emerald-400">
+                Good news: {readyClips.length} completed clips were saved and are available below!
+              </p>
+            )}
             <div className="pt-1">
               <button
                 type="button"
@@ -218,6 +255,38 @@ export function ProcessingStatus({ initialProject }: ProcessingStatusProps) {
           </div>
         )}
       </div>
+
+      {/* Live Ready Clips Section (Available immediately as they finish rendering) */}
+      {readyClips.length > 0 && (
+        <div className="space-y-4 rounded-xl border border-emerald-500/20 bg-emerald-950/10 p-5">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-emerald-400" />
+              <h3 className="text-sm font-semibold text-white">
+                Live Ready Shorts ({readyClips.length})
+              </h3>
+            </div>
+            <span className="text-xs text-emerald-400 font-medium animate-pulse">
+              ● Ready for download & preview
+            </span>
+          </div>
+          <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-4">
+            {readyClips.map((clip) => (
+              <ClipCard
+                key={clip.id}
+                clip={clip}
+                onPreview={(c) => setSelectedPreviewClip(c)}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Preview Modal for currently clicked clip */}
+      <ClipPreview
+        clip={selectedPreviewClip}
+        onClose={() => setSelectedPreviewClip(null)}
+      />
 
       {/* Processing Pipeline Stages */}
       <div className="space-y-3">

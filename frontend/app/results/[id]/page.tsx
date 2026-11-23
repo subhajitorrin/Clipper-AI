@@ -68,7 +68,7 @@ export default function ResultsPage({ params }: PageProps) {
             {project?.title || "Generated Shorts"}
           </h2>
           <p className="text-xs text-[#737373] mt-1">
-            Target duration: {project?.clip_duration || 45}s • {clips.length} clips generated
+            Target duration: {project?.clip_duration === 0 ? "Auto (Natural Length)" : `${project?.clip_duration || 45}s`} • {clips.length} clips generated
           </p>
         </div>
 

@@ -61,16 +61,49 @@ class Analyzer:
         """
         Scans the full transcript across all sections, evaluating viral potential,
         hooks, debates, insights, and emotional climaxes. Selects only the best, highest-scoring clips.
+        
+        If clip_duration <= 0: AUTO DURATION MODE (AI decides optimal natural story boundary between 18s and 75s).
+        If requested_clips <= 0: AUTO CLIPS MODE (Calculates optimal number of clips based on video length, up to 25).
         """
         if not words and not transcript:
             return []
 
+        # Determine total duration of the video in seconds from words if available
+        total_video_duration = words[-1]["end"] if words else 600.0
+
+        is_auto_clips = requested_clips <= 0
+        is_auto_duration = clip_duration <= 0
+
+        # In Auto clips mode, dynamically scale based on video length:
+        # e.g., ~1 clip per 3-4 minutes of content, min 5, max 30 clips
+        if is_auto_clips:
+            calculated_clips = max(5, min(30, int(total_video_duration / 200)))
+            target_clips = calculated_clips
+            print(f"  [Analyzer] AUTO CLIPS MODE: Video length {total_video_duration/60:.1f} mins -> targeting {target_clips} top viral shorts.")
+        else:
+            target_clips = requested_clips
+
         chunks = self._chunk_transcript(words, chunk_duration_sec=700.0, overlap_sec=60.0)
         if not chunks:
-            chunks = [{"text": transcript, "start_time": 0.0, "end_time": 60.0}]
+            chunks = [{"text": transcript, "start_time": 0.0, "end_time": max(60.0, total_video_duration)}]
 
-        tolerance = 5 if clip_duration <= 15 else 10
         all_candidate_moments = []
+
+        if is_auto_duration:
+            duration_instruction = (
+                "5. NATURAL DURATION (AUTO-DURATION MODE): Do NOT force an arbitrary cut length. "
+                "Let the speaker's natural thought, story, punchline, or hook dictate the clip boundaries. "
+                "Each clip must be a complete standalone thought between 18s and 75s (ideal sweet spot: 25s–60s). "
+                "Ensure the clip ends right after the punchline, resolution, or climax."
+            )
+            chunk_duration_hint = "Duration: Natural story/hook length between 18s and 75s (complete standalone thought)."
+        else:
+            tolerance = 5 if clip_duration <= 15 else 10
+            duration_instruction = (
+                f"5. DURATION: Each clip must be approximately {clip_duration}s "
+                f"(allowed range: {max(10, clip_duration - tolerance)}s to {clip_duration + tolerance}s)."
+            )
+            chunk_duration_hint = f"Target duration per clip: ~{clip_duration}s (allowed: {max(10, clip_duration - tolerance)}s - {clip_duration + tolerance}s)."
 
         system_instruction = (
             "You are an elite, world-class viral video curator and editor for YouTube Shorts, TikTok, and Instagram Reels.\n"
@@ -80,15 +113,15 @@ class Analyzer:
             "2. STANDALONE NARRATIVE: A viewer scrolling on TikTok/Shorts must understand the clip without having seen the rest of the video. It must have a beginning, middle, and satisfying climax or punchline.\n"
             "3. HIGH RETENTION & VIRALITY: Prioritize shocking revelations, intense debates, breakthrough advice, hilarious reactions, or deeply emotional storytelling over routine talk, introductions, or pleasantries.\n"
             "4. ACCURATE TIMESTAMPS: Start exactly right as the speaker begins the relevant thought/sentence, and end cleanly right as the point concludes.\n"
-            f"5. DURATION: Each clip must be approximately {clip_duration}s (range: {max(10, clip_duration - tolerance)}s to {clip_duration + tolerance}s)."
+            f"{duration_instruction}"
         )
 
-        clips_per_chunk = max(2, math.ceil((requested_clips * 1.5) / len(chunks)))
+        clips_per_chunk = max(3, math.ceil((target_clips * 1.5) / len(chunks)))
 
         for idx, chunk in enumerate(chunks):
             chunk_prompt = f"""Analyze this section of the podcast transcript (Time: {chunk['start_time']:.1f}s to {chunk['end_time']:.1f}s):
 Identify up to {clips_per_chunk} of the MOST viral, high-energy, or insightful clips from this section.
-Target duration per clip: ~{clip_duration}s (allowed: {max(10, clip_duration - tolerance)}s - {clip_duration + tolerance}s).
+{chunk_duration_hint}
 
 Transcript segment:
 \"\"\"
@@ -108,17 +141,22 @@ Transcript segment:
 
                 parsed = response.choices[0].message.parsed
                 for m in parsed.moments:
-                    # Validate timestamp bounds
                     duration = m.end_time - m.start_time
-                    if (clip_duration - tolerance - 5) <= duration <= (clip_duration + tolerance + 5):
-                        all_candidate_moments.append(m.model_dump())
+                    if is_auto_duration:
+                        # Allow flexible natural length between 15s and 90s
+                        if 15.0 <= duration <= 90.0:
+                            all_candidate_moments.append(m.model_dump())
+                    else:
+                        tolerance = 5 if clip_duration <= 15 else 10
+                        if (clip_duration - tolerance - 5) <= duration <= (clip_duration + tolerance + 5):
+                            all_candidate_moments.append(m.model_dump())
             except Exception as e:
                 print(f"  [Analyzer] Chunk {idx+1}/{len(chunks)} analysis warning: {e}")
 
         if not all_candidate_moments:
             # Fallback to single pass with transcript start
             try:
-                fallback_prompt = f"""Find the top {requested_clips} viral standalone moments (~{clip_duration}s each):
+                fallback_prompt = f"""Find the top {target_clips} viral standalone moments ({chunk_duration_hint}):
 {transcript[:25000]}
 """
                 response = self.client.beta.chat.completions.parse(
@@ -130,7 +168,7 @@ Transcript segment:
                     response_format=MomentAnalysis,
                     temperature=0.25
                 )
-                return [m.model_dump() for m in response.choices[0].message.parsed.moments][:requested_clips]
+                return [m.model_dump() for m in response.choices[0].message.parsed.moments][:target_clips]
             except Exception:
                 return []
 
@@ -140,6 +178,10 @@ Transcript segment:
 
         selected_moments = []
         for cand in all_candidate_moments:
+            # In auto mode, if we have plenty of candidates, only pick high virality scores (>= 60)
+            if is_auto_clips and cand.get("virality_score", 0) < 60 and len(selected_moments) >= 5:
+                continue
+
             c_start = cand["start_time"]
             c_end = cand["end_time"]
 
@@ -157,15 +199,15 @@ Transcript segment:
             if not has_heavy_overlap:
                 selected_moments.append(cand)
 
-            if len(selected_moments) >= requested_clips:
+            if len(selected_moments) >= target_clips:
                 break
 
-        # If not enough non-overlapping, fill with remaining candidates
-        if len(selected_moments) < requested_clips:
+        # If not enough non-overlapping, fill with remaining candidates up to target_clips
+        if len(selected_moments) < target_clips:
             for cand in all_candidate_moments:
                 if cand not in selected_moments:
                     selected_moments.append(cand)
-                if len(selected_moments) >= requested_clips:
+                if len(selected_moments) >= target_clips:
                     break
 
         print(f"  [Analyzer] Evaluated full video: selected top {len(selected_moments)} viral clips (virality scores: {[m.get('virality_score') for m in selected_moments]}).")

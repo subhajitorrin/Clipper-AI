@@ -52,76 +52,100 @@ def process_job(job: dict, db: SupabaseService, transcriber: Transcriber, analyz
             "total_clips": total_moments,
             "current_clip_index": 0,
             "current_clip_title": moments[0]["title"] if total_moments > 0 else "",
-            "step_description": f"Preparing {total_moments} viral clips..."
+            "step_description": f"Preparing {total_moments} viral clips...",
+            "successful_clips": 0
         })
         print(f"  [4/4] Cutting & rendering {total_moments} vertical clips...")
+
+        successful_clips_count = 0
 
         for i, moment in enumerate(moments):
             clip_num = i + 1
             clip_title = moment.get("title", f"Clip {clip_num}")
             print(f"  -> Processing clip {clip_num}/{total_moments}: '{clip_title}' ({moment['start_time']}s - {moment['end_time']}s)")
             
-            # Update progress: downloading
-            progress_val = int(75 + ((i + 0.2) / total_moments) * 20)
-            db.update_progress(job_id, "rendering", progress_val, metadata={
-                "total_clips": total_moments,
-                "current_clip_index": clip_num,
-                "current_clip_title": clip_title,
-                "current_clip_stage": "downloading",
-                "step_description": f"Downloading clip {clip_num} of {total_moments}: \"{clip_title}\""
-            })
-
             raw_section_path = os.path.join(job_temp_dir, f"raw_clip_{i}.mp4")
             vertical_clip_path = os.path.join(job_temp_dir, f"clip_{i}.mp4")
             thumbnail_clip_path = os.path.join(job_temp_dir, f"thumb_{i}.jpg")
             subtitle_ass_path = os.path.join(job_temp_dir, f"clip_{i}.ass")
 
-            # Zero-storage: only download the exact chunk
-            Downloader.download_section(video_url, moment["start_time"], moment["end_time"], raw_section_path)
-
-            # Generate dynamic word-by-word karaoke ASS captions
             try:
-                CaptionGenerator.generate_ass(
-                    words=words,
-                    clip_start=moment["start_time"],
-                    clip_end=moment["end_time"],
-                    output_ass_path=subtitle_ass_path,
-                    style_preset="HormoziYellow"
-                )
-            except Exception as ce:
-                print(f"Caption generation warning: {ce}")
-                subtitle_ass_path = None
-            
-            # Update progress: rendering vertical 9:16
-            progress_val = int(75 + ((i + 0.6) / total_moments) * 20)
-            db.update_progress(job_id, "rendering", progress_val, metadata={
-                "total_clips": total_moments,
-                "current_clip_index": clip_num,
-                "current_clip_title": clip_title,
-                "current_clip_stage": "rendering",
-                "step_description": f"Reframing & rendering clip {clip_num} of {total_moments} with dynamic captions..."
-            })
-            VideoEditor.render_vertical_clip(raw_section_path, vertical_clip_path, subtitle_path=subtitle_ass_path)
+                # Update progress: downloading section
+                progress_val = int(75 + ((i + 0.2) / total_moments) * 20)
+                db.update_progress(job_id, "rendering", progress_val, metadata={
+                    "total_clips": total_moments,
+                    "current_clip_index": clip_num,
+                    "current_clip_title": clip_title,
+                    "current_clip_stage": "downloading",
+                    "step_description": f"Downloading clip {clip_num} of {total_moments}: \"{clip_title}\"",
+                    "successful_clips": successful_clips_count
+                })
 
-            # Generate high-quality 9:16 video thumbnail frame
-            try:
-                VideoEditor.extract_thumbnail(vertical_clip_path, thumbnail_clip_path, timestamp=1.0)
-            except Exception as te:
-                print(f"Thumbnail generation warning: {te}")
+                # Zero-storage: only download the exact chunk with resilient retries
+                Downloader.download_section(video_url, moment["start_time"], moment["end_time"], raw_section_path)
 
-            # Upload clip and record to Supabase
-            progress_val = int(75 + ((i + 0.9) / total_moments) * 20)
-            db.update_progress(job_id, "rendering", progress_val, metadata={
-                "total_clips": total_moments,
-                "current_clip_index": clip_num,
-                "current_clip_title": clip_title,
-                "current_clip_stage": "uploading",
-                "step_description": f"Saving & uploading clip {clip_num} of {total_moments}..."
-            })
-            db.upload_clip(job_id, vertical_clip_path, moment, thumbnail_path=thumbnail_clip_path)
+                # Generate dynamic word-by-word karaoke ASS captions
+                try:
+                    CaptionGenerator.generate_ass(
+                        words=words,
+                        clip_start=moment["start_time"],
+                        clip_end=moment["end_time"],
+                        output_ass_path=subtitle_ass_path,
+                        style_preset="HormoziYellow"
+                    )
+                except Exception as ce:
+                    print(f"Caption generation warning: {ce}")
+                    subtitle_ass_path = None
+                
+                # Update progress: rendering vertical 9:16
+                progress_val = int(75 + ((i + 0.6) / total_moments) * 20)
+                db.update_progress(job_id, "rendering", progress_val, metadata={
+                    "total_clips": total_moments,
+                    "current_clip_index": clip_num,
+                    "current_clip_title": clip_title,
+                    "current_clip_stage": "rendering",
+                    "step_description": f"Reframing & rendering clip {clip_num} of {total_moments} with dynamic captions...",
+                    "successful_clips": successful_clips_count
+                })
+                VideoEditor.render_vertical_clip(raw_section_path, vertical_clip_path, subtitle_path=subtitle_ass_path)
 
-        db.complete_job(job_id)
-        print(f"🎉 Job {job_id} completed successfully!")
+                # Generate high-quality 9:16 video thumbnail frame
+                try:
+                    VideoEditor.extract_thumbnail(vertical_clip_path, thumbnail_clip_path, timestamp=1.0)
+                except Exception as te:
+                    print(f"Thumbnail generation warning: {te}")
+
+                # Upload clip and record to Supabase (immediately available in UI!)
+                progress_val = int(75 + ((i + 0.9) / total_moments) * 20)
+                successful_clips_count += 1
+                db.update_progress(job_id, "rendering", progress_val, metadata={
+                    "total_clips": total_moments,
+                    "current_clip_index": clip_num,
+                    "current_clip_title": clip_title,
+                    "current_clip_stage": "uploading",
+                    "step_description": f"Saved clip {successful_clips_count}! Processing next...",
+                    "successful_clips": successful_clips_count
+                })
+                db.upload_clip(job_id, vertical_clip_path, moment, thumbnail_path=thumbnail_clip_path)
+                print(f"  ✅ Clip {clip_num}/{total_moments} uploaded successfully and ready for playback!")
+
+            except Exception as clip_err:
+                # If a single clip fails after retries, log warning and continue with remaining clips
+                print(f"  ⚠️ Clip {clip_num} failed: {clip_err}. Skipping to next clip to preserve progress...")
+            finally:
+                # Clean up intermediate files for this clip
+                for p in [raw_section_path, vertical_clip_path, thumbnail_clip_path, subtitle_ass_path]:
+                    if p and os.path.exists(p):
+                        try:
+                            os.remove(p)
+                        except Exception:
+                            pass
+
+        if successful_clips_count > 0:
+            db.complete_job(job_id)
+            print(f"🎉 Job {job_id} completed successfully! ({successful_clips_count}/{total_moments} clips generated)")
+        else:
+            raise RuntimeError("No clips could be rendered successfully.")
 
     except Exception as e:
         print(f"❌ Job {job_id} failed: {e}")

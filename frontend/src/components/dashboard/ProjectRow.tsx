@@ -58,9 +58,13 @@ export function ProjectRow({ project }: ProjectRowProps) {
           <div className="flex flex-wrap items-center gap-2 text-xs text-[#737373] mt-1">
             <span>{formattedDate}</span>
             <span>•</span>
-            <span>{project.clip_count ?? project.requested_clips} clips</span>
+            <span>
+              {project.clip_count ?? (project.requested_clips === 0 ? "Auto" : project.requested_clips)} clips
+            </span>
             <span>•</span>
-            <span>{project.clip_duration}s target</span>
+            <span>
+              {project.clip_duration === 0 ? "Auto duration" : `${project.clip_duration}s target`}
+            </span>
           </div>
         </div>
       </div>
