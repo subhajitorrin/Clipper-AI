@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Clipper AI — Turn Long YouTube Videos into Viral Shorts & Reels</title>
-  <meta name="description" content="Paste any YouTube link or podcast. Clipper AI automatically finds viral highlights, centers the speaker in 9:16 vertical video, and burns animated captions ready to post on TikTok, Reels, and Shorts." />
+  <meta name="description" content="Drop a YouTube link or podcast, and Clipper AI automatically finds the best moments, turns them into vertical shorts (9:16), adds captions, and gets them ready for TikTok, Instagram, and YouTube." />
   
   <!-- Fonts: Inter, Plus Jakarta Sans, JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -24,20 +24,21 @@
             mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace']
           },
           colors: {
-            surface: {
-              DEFAULT: '#090A0F',
-              50: '#141824',
-              100: '#11141F',
-              200: '#0E111A',
-              300: '#090A0F',
-              border: 'rgba(255, 255, 255, 0.08)',
-              'border-hover': 'rgba(255, 255, 255, 0.16)',
+            forest: {
+              950: '#050A07',
+              900: '#070D0A',
+              850: '#0B1510',
+              800: '#0F1E17',
+              750: '#14271E',
+              700: '#1A3328',
+              600: '#234637',
+              500: '#2D5947'
             },
-            accent: {
-              DEFAULT: '#6366F1',
-              hover: '#4F46E5',
-              light: '#818CF8',
-              dim: 'rgba(99, 102, 241, 0.12)'
+            mint: {
+              300: '#6EE7B7',
+              400: '#34D399',
+              500: '#10B981',
+              600: '#059669'
             }
           }
         }
@@ -46,67 +47,49 @@
   </script>
 
   <style>
-    /* Architectural ambient light & subtle isometric grid */
-    .hero-mesh-bg {
-      background-color: #08090C;
-      background-image: 
-        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(99, 102, 241, 0.18), transparent 70%),
-        radial-gradient(ellipse 60% 40% at 50% 100%, rgba(16, 185, 129, 0.05), transparent 60%),
-        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-      background-size: 100% 100%, 100% 100%, 48px 48px, 48px 48px;
-      mask-image: radial-gradient(ellipse 90% 70% at 50% 40%, black 50%, transparent 100%);
-      -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 40%, black 50%, transparent 100%);
+    /* Clean micro-pattern background for lower sections */
+    .bg-forest-grid {
+      background-image: radial-gradient(rgba(52, 211, 153, 0.08) 1px, transparent 1px);
+      background-size: 32px 32px;
     }
 
-    /* Ambient top beam effect */
-    .hero-top-beam {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 70%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.6), rgba(255, 255, 255, 0.8), rgba(99, 102, 241, 0.6), transparent);
-    }
-
-    /* Subtitle highlight simulation */
+    /* Subtitle highlight animation simulation */
     @keyframes wordHighlight {
       0%, 100% { color: #ffffff; background-color: transparent; }
-      50% { color: #000000; background-color: #facc15; }
+      50% { color: #050a07; background-color: #34d399; }
     }
     .active-word {
       animation: wordHighlight 1.8s infinite;
-      padding: 1px 4px;
+      padding: 1px 5px;
       border-radius: 4px;
       font-weight: 800;
     }
   </style>
 </head>
-<body class="bg-[#08090C] text-zinc-300 font-sans selection:bg-indigo-500 selection:text-white min-h-screen flex flex-col">
+<body class="bg-[#070D0A] text-zinc-300 font-sans selection:bg-emerald-500 selection:text-black min-h-screen flex flex-col">
 
-  <!-- Primary Navigation -->
-  <header class="sticky top-0 z-50 backdrop-blur-md bg-[#08090C]/85 border-b border-white/[0.07]">
+  <!-- Primary Navigation (Matches Mockup) -->
+  <header class="sticky top-0 z-50 backdrop-blur-md bg-[#070D0A]/85 border-b border-emerald-500/15">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
       
       <!-- Brand Logo -->
       <a href="#" class="flex items-center gap-3 group">
-        <div class="w-8 h-8 rounded-lg bg-zinc-900 border border-white/15 flex items-center justify-center text-white transition-all group-hover:border-indigo-500/50 group-hover:bg-zinc-800">
-          <svg class="w-4 h-4 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="3" width="18" height="18" rx="3" />
-            <path d="M7 3v18" />
-            <path d="M17 3v18" />
+        <div class="w-8 h-8 rounded-lg bg-[#0F231B] border border-emerald-500/30 flex items-center justify-center text-white transition-all group-hover:border-emerald-400 group-hover:bg-[#153126]">
+          <svg class="w-4 h-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="4" />
+            <path d="M8 3v18" />
+            <path d="M16 3v18" />
             <path d="M3 12h18" />
           </svg>
         </div>
         <div class="flex items-center gap-2">
           <span class="font-display font-bold text-base text-white tracking-tight">Clipper</span>
-          <span class="text-[11px] font-mono px-1.5 py-0.2 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">AI</span>
+          <span class="text-[11px] font-mono px-1.5 py-0.2 rounded bg-[#132C22] text-emerald-400 border border-emerald-500/30">AI</span>
         </div>
       </a>
 
       <!-- Navigation Links -->
-      <nav class="hidden md:flex items-center gap-7 text-xs font-medium tracking-wide text-zinc-400">
+      <nav class="hidden md:flex items-center gap-7 text-xs font-medium tracking-wide text-zinc-300">
         <a href="#how-it-works" class="hover:text-white transition-colors">How It Works</a>
         <a href="#demo" class="hover:text-white transition-colors">Live Demo</a>
         <a href="#features" class="hover:text-white transition-colors">Features</a>
@@ -119,7 +102,7 @@
         <a 
           href="https://github.com/subhajitorrin" 
           target="_blank" 
-          class="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-white/10 hover:border-white/20 text-xs font-medium text-zinc-200 transition"
+          class="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/15 text-xs font-medium text-zinc-200 transition"
         >
           <svg class="w-3.5 h-3.5 fill-current text-zinc-300" viewBox="0 0 24 24">
             <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
@@ -129,11 +112,11 @@
 
         <a 
           href="#demo" 
-          class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-white text-black hover:bg-zinc-200 text-xs font-semibold tracking-tight transition shadow-sm"
+          class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white text-black hover:bg-zinc-200 text-xs font-semibold tracking-tight transition shadow-sm"
         >
           <span>Watch Demo</span>
-          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="5 3 19 12 5 21 5 3" fill="currentColor" />
+          <svg class="w-3 h-3 fill-current ml-0.5" viewBox="0 0 24 24">
+            <polygon points="6 4 20 12 6 20 6 4" />
           </svg>
         </a>
       </div>
@@ -142,71 +125,129 @@
 
   <main class="flex-1">
 
-    <!-- Hero Section: Clear, Simple, Creator-Focused with Aesthetic Background -->
-    <section class="relative pt-24 pb-24 md:pt-32 md:pb-28 border-b border-white/[0.07] overflow-hidden">
-      <!-- Background Graphic Layers -->
-      <div class="absolute inset-0 hero-mesh-bg pointer-events-none"></div>
-      <div class="hero-top-beam pointer-events-none"></div>
+    <!-- HERO SECTION (Exactly Matching User Provided Mockup & image.png) -->
+    <section class="relative min-h-[85vh] sm:min-h-[90vh] flex flex-col justify-between pt-12 pb-14 sm:pb-16 overflow-hidden border-b border-emerald-500/20 bg-[#070D0A]">
       
-      <!-- Subtle Floating Ambient Glow Orbs -->
-      <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[540px] h-[280px] bg-indigo-500/10 blur-[120px] rounded-full pointer-events-none"></div>
+      <!-- Studio Background Image with Cinematic Lighting & Center Readability Vignette -->
+      <div class="absolute inset-0 z-0 select-none pointer-events-none">
+        <img 
+          src="image.png" 
+          alt="Podcast Studio Background" 
+          class="w-full h-full object-cover object-top opacity-85 sm:opacity-90"
+        />
+        <!-- Center Gradient Wash to ensure all text pops in the center while hosts stay visible on sides -->
+        <div class="absolute inset-0 bg-gradient-to-t from-[#070D0A] via-[#070D0A]/35 to-[#070D0A]/55"></div>
+        <div class="absolute inset-0 bg-radial-gradient(circle at 50% 45%, rgba(7, 13, 10, 0.5) 0%, rgba(7, 13, 10, 0.15) 55%, rgba(7, 13, 10, 0.85) 100%)"></div>
+      </div>
 
-      <div class="relative max-w-5xl mx-auto px-4 sm:px-6 text-center z-10">
+      <!-- Hero Main Content (Center Stack) -->
+      <div class="relative max-w-4xl mx-auto px-4 sm:px-6 text-center z-10 my-auto">
         
-        <!-- Creator Badge -->
-        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/10 bg-zinc-900/90 backdrop-blur-md text-xs text-zinc-300 mb-8 shadow-xl shadow-black/40 hover:border-white/20 transition-colors">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span class="font-medium text-zinc-200">AI Video Repurposing for Creators & Podcasters</span>
+        <!-- Pill Badge -->
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-emerald-500/35 bg-[#0D241B]/90 backdrop-blur-md text-xs text-emerald-300 mb-6 sm:mb-8 shadow-lg shadow-black/40">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          <span class="font-medium text-emerald-300">Long-Form to Viral Shorts with AI</span>
         </div>
 
-        <!-- Balanced 3-Line Headline -->
-        <h1 class="font-display text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white leading-[1.12] mb-6 drop-shadow-sm max-w-4xl mx-auto">
-          Turn long YouTube videos into <br />
-          viral Shorts & Reels <br />
-          <span class="bg-gradient-to-b from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent">
-            in minutes.
-          </span>
+        <!-- Headline with Emerald Highlight -->
+        <h1 class="font-display text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white leading-[1.12] mb-6 drop-shadow-md">
+          Turn Long YouTube Videos <br />
+          into <span class="text-emerald-400">Viral Shorts</span> in Minutes.
         </h1>
 
         <!-- Easy to Understand Subtitle -->
-        <p class="max-w-2xl mx-auto text-base sm:text-lg text-zinc-400 leading-relaxed font-normal mb-10">
-          Paste any YouTube link or podcast. Clipper AI automatically finds the best highlights, centers whoever is speaking in vertical 9:16, and burns animated captions ready to post on TikTok, Instagram, and YouTube.
+        <p class="max-w-2xl mx-auto text-sm sm:text-base text-zinc-200/90 leading-relaxed font-normal mb-8 sm:mb-10 drop-shadow-sm">
+          Drop a YouTube link or podcast, and Clipper AI automatically finds the best moments, turns them into vertical shorts (9:16), adds captions, and gets them ready for TikTok, Instagram, and YouTube.
         </p>
 
-        <!-- Mock Interactive Link Input Box (Speaks to Non-Technical Users Immediately) -->
-        <div class="max-w-xl mx-auto p-1.5 rounded-2xl bg-zinc-900/90 backdrop-blur-md border border-white/15 shadow-2xl shadow-indigo-950/20 flex flex-col sm:flex-row items-center gap-2 transition hover:border-white/25">
+        <!-- Glassmorphism Interactive Link Input Bar -->
+        <div class="max-w-xl mx-auto p-1.5 rounded-full bg-[#0E251D]/80 backdrop-blur-md border border-emerald-500/40 shadow-2xl shadow-emerald-950/40 mb-10 flex flex-col sm:flex-row items-center gap-2 transition hover:border-emerald-400/60">
           <div class="flex items-center gap-2.5 px-3.5 py-2 w-full text-left">
-            <svg class="w-4 h-4 text-red-500 shrink-0" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-            </svg>
+            <!-- Red YouTube Play Icon -->
+            <div class="w-6 h-6 rounded bg-red-600 flex items-center justify-center shrink-0 ml-0.5 shadow-sm">
+              <svg class="w-3.5 h-3.5 fill-white ml-0.5" viewBox="0 0 24 24">
+                <polygon points="8 5 19 12 8 19 8 5" />
+              </svg>
+            </div>
             <input 
               type="text" 
               readonly 
               value="https://youtube.com/watch?v=1-XZQ-Vv4sU" 
-              class="w-full bg-transparent text-xs text-zinc-300 font-mono focus:outline-none cursor-default"
+              class="w-full bg-transparent text-xs text-zinc-200 font-mono focus:outline-none cursor-default truncate"
             />
           </div>
           <a 
             href="#demo" 
-            class="w-full sm:w-auto shrink-0 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-white text-black font-semibold text-xs hover:bg-zinc-200 transition-all tracking-tight shadow-md hover:shadow-lg active:scale-98"
+            class="w-full sm:w-auto shrink-0 inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-full bg-white text-black font-bold text-xs hover:bg-zinc-100 transition-all tracking-tight shadow-md whitespace-nowrap active:scale-98"
           >
-            <span>See How It Works</span>
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M5 12h14" />
-              <path d="M12 5l7 7-7 7" />
-            </svg>
+            <span>Create Shorts Now</span>
+            <span class="text-sm font-bold">&rarr;</span>
           </a>
         </div>
 
       </div>
+
+      <!-- 3 Glassmorphism Feature Cards at Bottom of Hero (Exact Match with Mockup) -->
+      <div class="relative max-w-5xl mx-auto px-4 sm:px-6 w-full z-10 mt-6 sm:mt-10">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          
+          <!-- Card 1: Find Key Moments -->
+          <div class="p-4 sm:p-5 rounded-2xl bg-[#0F241C]/80 backdrop-blur-md border border-emerald-500/25 hover:border-emerald-500/45 transition-all text-left flex items-start gap-4 shadow-xl">
+            <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center shrink-0 text-white border border-white/10">
+              <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="6" cy="6" r="3" />
+                <circle cx="6" cy="18" r="3" />
+                <line x1="20" y1="4" x2="8.12" y2="15.88" />
+                <line x1="14.47" y1="14.48" x2="20" y2="20" />
+                <line x1="8.12" y1="8.12" x2="12" y2="12" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-white font-display">Find Key Moments</h3>
+              <p class="text-xs text-zinc-300/85 mt-1 leading-snug">AI detects the most engaging highlights automatically.</p>
+            </div>
+          </div>
+
+          <!-- Card 2: Auto Reframe (9:16) -->
+          <div class="p-4 sm:p-5 rounded-2xl bg-[#0F241C]/80 backdrop-blur-md border border-emerald-500/25 hover:border-emerald-500/45 transition-all text-left flex items-start gap-4 shadow-xl">
+            <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center shrink-0 text-white border border-white/10">
+              <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+                <line x1="12" y1="18" x2="12.01" y2="18" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-white font-display">Auto Reframe (9:16)</h3>
+              <p class="text-xs text-zinc-300/85 mt-1 leading-snug">Keeps the speaker in focus for Shorts & Reels.</p>
+            </div>
+          </div>
+
+          <!-- Card 3: Animated Captions -->
+          <div class="p-4 sm:p-5 rounded-2xl bg-[#0F241C]/80 backdrop-blur-md border border-emerald-500/25 hover:border-emerald-500/45 transition-all text-left flex items-start gap-4 shadow-xl">
+            <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center shrink-0 text-white border border-white/10">
+              <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="5" width="18" height="14" rx="2" />
+                <path d="M7 15h2a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2H7v6z" />
+                <path d="M13 15h2a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-2v6z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-white font-display">Animated Captions</h3>
+              <p class="text-xs text-zinc-300/85 mt-1 leading-snug">Adds styled, ready-to-post captions instantly.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
     </section>
 
     <!-- How It Works in 3 Simple Steps -->
-    <section id="how-it-works" class="py-14 sm:py-20 border-b border-white/[0.07] bg-[#090A0F]">
+    <section id="how-it-works" class="py-16 sm:py-20 border-b border-emerald-500/15 bg-[#08120D] bg-forest-grid">
       <div class="max-w-5xl mx-auto px-4 sm:px-6">
         
         <div class="text-center max-w-xl mx-auto mb-12">
-          <div class="text-xs font-mono uppercase tracking-widest text-indigo-400 font-semibold mb-2">Simplicity First</div>
+          <div class="text-xs font-mono uppercase tracking-widest text-emerald-400 font-semibold mb-2">Simplicity First</div>
           <h2 class="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">How it works in 3 easy steps</h2>
           <p class="text-xs sm:text-sm text-zinc-400 mt-1">No video editing experience or complex timelines required.</p>
         </div>
@@ -214,8 +255,8 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           
           <!-- Step 1 -->
-          <div class="p-6 rounded-2xl bg-zinc-950 border border-white/[0.08] relative">
-            <div class="w-8 h-8 rounded-full bg-zinc-900 border border-white/10 flex items-center justify-center text-xs font-mono font-bold text-indigo-400 mb-4">
+          <div class="p-6 rounded-2xl bg-[#0B1812] border border-emerald-500/20 relative hover:border-emerald-500/40 transition">
+            <div class="w-8 h-8 rounded-full bg-[#11261D] border border-emerald-500/30 flex items-center justify-center text-xs font-mono font-bold text-emerald-400 mb-4">
               1
             </div>
             <h3 class="text-base font-bold font-display text-white mb-2">Paste Video Link</h3>
@@ -225,8 +266,8 @@
           </div>
 
           <!-- Step 2 -->
-          <div class="p-6 rounded-2xl bg-zinc-950 border border-white/[0.08] relative">
-            <div class="w-8 h-8 rounded-full bg-zinc-900 border border-white/10 flex items-center justify-center text-xs font-mono font-bold text-indigo-400 mb-4">
+          <div class="p-6 rounded-2xl bg-[#0B1812] border border-emerald-500/20 relative hover:border-emerald-500/40 transition">
+            <div class="w-8 h-8 rounded-full bg-[#11261D] border border-emerald-500/30 flex items-center justify-center text-xs font-mono font-bold text-emerald-400 mb-4">
               2
             </div>
             <h3 class="text-base font-bold font-display text-white mb-2">AI Analyzes & Cuts</h3>
@@ -236,8 +277,8 @@
           </div>
 
           <!-- Step 3 -->
-          <div class="p-6 rounded-2xl bg-zinc-950 border border-white/[0.08] relative">
-            <div class="w-8 h-8 rounded-full bg-zinc-900 border border-white/10 flex items-center justify-center text-xs font-mono font-bold text-indigo-400 mb-4">
+          <div class="p-6 rounded-2xl bg-[#0B1812] border border-emerald-500/20 relative hover:border-emerald-500/40 transition">
+            <div class="w-8 h-8 rounded-full bg-[#11261D] border border-emerald-500/30 flex items-center justify-center text-xs font-mono font-bold text-emerald-400 mb-4">
               3
             </div>
             <h3 class="text-base font-bold font-display text-white mb-2">Download & Publish</h3>
@@ -251,10 +292,10 @@
       </div>
     </section>
 
-    <!-- LIVE DEMO SECTION (Clean, Direct, with Working Thumbnail & Play Overlay) -->
+    <!-- LIVE DEMO SECTION -->
     <section id="demo" class="py-16 md:py-24 max-w-5xl mx-auto px-4 sm:px-6">
       
-      <!-- Section Title Header: Clear & Simple as Requested -->
+      <!-- Section Title Header -->
       <div class="text-center max-w-2xl mx-auto mb-10">
         <h2 class="text-3xl sm:text-4xl font-display font-bold text-white tracking-tight">Live Demo</h2>
         <p class="text-sm text-zinc-400 mt-2">
@@ -263,10 +304,10 @@
       </div>
 
       <!-- Video Player Frame with Visible Thumbnail and Click-to-Play Overlay -->
-      <div class="rounded-2xl border border-white/[0.12] bg-[#0C0E14] shadow-2xl overflow-hidden">
+      <div class="rounded-2xl border border-emerald-500/25 bg-[#08120D] shadow-2xl overflow-hidden">
         
         <!-- Subtle Top Bar -->
-        <div class="h-10 border-b border-white/[0.08] bg-zinc-900/90 px-4 flex items-center justify-between text-xs text-zinc-400 select-none">
+        <div class="h-10 border-b border-emerald-500/15 bg-[#0B1712] px-4 flex items-center justify-between text-xs text-zinc-400 select-none">
           <div class="flex items-center gap-2">
             <div class="flex items-center gap-1.5">
               <span class="w-2.5 h-2.5 rounded-full bg-zinc-700"></span>
@@ -279,7 +320,7 @@
           </div>
 
           <div class="flex items-center gap-2">
-            <span class="text-[11px] px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 border border-white/5 font-mono">1080x1920 HD</span>
+            <span class="text-[11px] px-2 py-0.5 rounded bg-[#10241B] text-emerald-300 border border-emerald-500/30 font-mono">1080x1920 HD</span>
           </div>
         </div>
 
@@ -302,14 +343,14 @@
           <div 
             id="video-play-overlay" 
             onclick="playMainVideo()"
-            class="absolute inset-0 bg-black/30 hover:bg-black/20 flex flex-col items-center justify-center cursor-pointer transition-all duration-300"
+            class="absolute inset-0 bg-black/35 hover:bg-black/25 flex flex-col items-center justify-center cursor-pointer transition-all duration-300"
           >
             <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white text-black flex items-center justify-center shadow-2xl transition-transform duration-200 group-hover:scale-105">
               <svg class="w-7 h-7 sm:w-8 sm:h-8 ml-1 fill-current" viewBox="0 0 24 24">
                 <polygon points="6 4 20 12 6 20 6 4" />
               </svg>
             </div>
-            <span class="mt-4 px-3 py-1 rounded-full bg-black/80 backdrop-blur-sm text-xs font-medium text-white border border-white/10">
+            <span class="mt-4 px-3.5 py-1.5 rounded-full bg-black/85 backdrop-blur-sm text-xs font-medium text-white border border-emerald-500/30">
               Click to Play Demo (1m 32s)
             </span>
           </div>
@@ -317,24 +358,24 @@
         </div>
 
         <!-- Video Bottom Summary Bar -->
-        <div class="p-4 bg-zinc-950/80 border-t border-white/[0.08] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-zinc-400">
+        <div class="p-4 bg-[#09150F] border-t border-emerald-500/15 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-zinc-400">
           <div class="flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-            <span class="text-zinc-300">Smart Face Tracking</span>
+            <span class="text-zinc-200">Smart Face Tracking</span>
             <span class="text-zinc-600">·</span>
-            <span class="text-zinc-300">Word-Level Animated Captions</span>
+            <span class="text-zinc-200">Word-Level Animated Captions</span>
             <span class="text-zinc-600">·</span>
-            <span class="text-zinc-300">1080x1920 Vertical Crop</span>
+            <span class="text-zinc-200">1080x1920 Vertical Crop</span>
           </div>
 
           <a 
             href="https://pub-54b53270ca084c3cb6121e9adb5858a1.r2.dev/demo.mp4" 
             target="_blank" 
             download
-            class="text-zinc-300 hover:text-white transition-colors flex items-center gap-1.5 font-medium"
+            class="text-emerald-400 hover:text-emerald-300 transition-colors flex items-center gap-1.5 font-medium"
           >
             <span>Download Sample MP4</span>
-            <svg class="w-3.5 h-3.5 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
               <polyline points="7 10 12 15 17 10" />
               <line x1="12" y1="15" x2="12" y2="3" />
@@ -346,12 +387,12 @@
 
     </section>
 
-    <!-- Before vs After Comparison (Visually Explains the Value in 5 Seconds) -->
-    <section class="py-16 md:py-20 border-t border-white/[0.07] bg-[#090B10]">
+    <!-- Before vs After Comparison -->
+    <section class="py-16 md:py-20 border-t border-emerald-500/15 bg-[#08120D]">
       <div class="max-w-5xl mx-auto px-4 sm:px-6">
         
         <div class="text-center max-w-xl mx-auto mb-12">
-          <div class="text-xs font-mono uppercase tracking-widest text-indigo-400 font-semibold mb-2">Automated Framing</div>
+          <div class="text-xs font-mono uppercase tracking-widest text-emerald-400 font-semibold mb-2">Automated Framing</div>
           <h2 class="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">Never lose the speaker off-screen</h2>
           <p class="text-xs sm:text-sm text-zinc-400 mt-1">
             Manual video editors spend hours keyframing video crops. Clipper AI detects faces and automatically centers the active speaker.
@@ -361,7 +402,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           
           <!-- Bad: Static Center Crop -->
-          <div class="p-5 rounded-2xl bg-zinc-950 border border-red-500/20">
+          <div class="p-5 rounded-2xl bg-[#0A1610] border border-red-500/25">
             <div class="flex items-center justify-between text-xs font-semibold mb-3">
               <span class="text-red-400 flex items-center gap-1.5">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -385,7 +426,7 @@
           </div>
 
           <!-- Good: Clipper AI Smart Tracking -->
-          <div class="p-5 rounded-2xl bg-zinc-950 border border-emerald-500/30 shadow-lg">
+          <div class="p-5 rounded-2xl bg-[#0A1610] border border-emerald-500/35 shadow-lg shadow-emerald-950/20">
             <div class="flex items-center justify-between text-xs font-semibold mb-3">
               <span class="text-emerald-400 flex items-center gap-1.5">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
@@ -394,9 +435,9 @@
               <span class="text-emerald-400 text-[11px] font-mono">Always in frame</span>
             </div>
             
-            <div class="relative aspect-video rounded-xl bg-zinc-900 overflow-hidden flex items-center justify-between px-6 border border-white/10">
+            <div class="relative aspect-video rounded-xl bg-zinc-900 overflow-hidden flex items-center justify-between px-6 border border-emerald-500/20">
               <!-- Smart crop following the host -->
-              <div class="w-16 h-16 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[10px] font-bold">Host</div>
+              <div class="w-16 h-16 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px] font-bold">Host</div>
               <div class="absolute left-4 inset-y-0 w-1/3 border-2 border-emerald-400 bg-emerald-500/15 flex items-center justify-center text-[10px] text-emerald-300 font-mono font-bold">
                 9:16 Centered
               </div>
@@ -414,22 +455,22 @@
     </section>
 
     <!-- Sample Output Gallery (With Real Image Thumbnails!) -->
-    <section id="samples" class="py-16 md:py-24 border-t border-white/[0.07] bg-[#08090C]">
+    <section id="samples" class="py-16 md:py-24 border-t border-emerald-500/15 bg-[#070D0A]">
       <div class="max-w-6xl mx-auto px-4 sm:px-6">
         
         <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
           <div>
-            <div class="text-xs font-mono uppercase tracking-widest text-indigo-400 font-semibold mb-2">Ready to Post</div>
+            <div class="text-xs font-mono uppercase tracking-widest text-emerald-400 font-semibold mb-2">Ready to Post</div>
             <h2 class="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">Real Generated Vertical Shorts</h2>
             <p class="text-xs sm:text-sm text-zinc-400 mt-1">Exported in 1080x1920 with speaker tracking and burned captions.</p>
           </div>
-          <span class="text-xs text-zinc-400">Export format: MP4 (H.264 / 60 FPS)</span>
+          <span class="text-xs text-zinc-400 font-mono">Export: 1080×1920 MP4 (60 FPS)</span>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           
           <!-- Sample Card 1 -->
-          <div class="rounded-xl border border-white/[0.08] bg-zinc-950 overflow-hidden group hover:border-white/[0.2] transition">
+          <div class="rounded-xl border border-emerald-500/20 bg-[#0A1610] overflow-hidden group hover:border-emerald-500/40 transition">
             <div class="relative aspect-[9/13] bg-zinc-900 overflow-hidden flex flex-col justify-between p-4">
               <!-- Actual Real Image Poster Thumbnail -->
               <img 
@@ -442,7 +483,7 @@
               <!-- Top Badges -->
               <div class="relative z-10 flex items-center justify-between text-[11px]">
                 <span class="px-2 py-0.5 rounded bg-black/80 backdrop-blur-sm border border-white/10 text-white font-mono font-bold">44s</span>
-                <span class="px-2 py-0.5 rounded bg-amber-500/20 backdrop-blur-sm border border-amber-500/30 text-amber-300 font-bold text-[10px]">VIRALITY: 96</span>
+                <span class="px-2 py-0.5 rounded bg-emerald-500/20 backdrop-blur-sm border border-emerald-500/30 text-emerald-300 font-bold text-[10px]">VIRALITY: 96</span>
               </div>
 
               <!-- Center Play Icon -->
@@ -454,21 +495,21 @@
 
               <!-- Bottom Content -->
               <div class="relative z-10 space-y-1.5">
-                <span class="text-[10px] font-mono text-zinc-400">05:12 &rarr; 05:56</span>
+                <span class="text-[10px] font-mono text-emerald-300">05:12 &rarr; 05:56</span>
                 <h4 class="text-sm font-bold text-white font-display">Specific Knowledge vs Status Games</h4>
                 <p class="text-xs text-zinc-300 line-clamp-2 leading-relaxed">
                   "Arm yourself with specific knowledge. If society can train you, it can train someone else and replace you."
                 </p>
               </div>
             </div>
-            <div class="p-3 border-t border-white/[0.08] flex items-center justify-between text-xs text-zinc-400">
+            <div class="p-3 border-t border-emerald-500/15 flex items-center justify-between text-xs text-zinc-400">
               <span>Naval Ravikant</span>
               <span class="text-emerald-400 font-medium">Auto-Centered</span>
             </div>
           </div>
 
           <!-- Sample Card 2 -->
-          <div class="rounded-xl border border-white/[0.08] bg-zinc-950 overflow-hidden group hover:border-white/[0.2] transition">
+          <div class="rounded-xl border border-emerald-500/20 bg-[#0A1610] overflow-hidden group hover:border-emerald-500/40 transition">
             <div class="relative aspect-[9/13] bg-zinc-900 overflow-hidden flex flex-col justify-between p-4">
               <!-- Actual Real Image Poster Thumbnail -->
               <img 
@@ -480,7 +521,7 @@
               
               <div class="relative z-10 flex items-center justify-between text-[11px]">
                 <span class="px-2 py-0.5 rounded bg-black/80 backdrop-blur-sm border border-white/10 text-white font-mono font-bold">45s</span>
-                <span class="px-2 py-0.5 rounded bg-amber-500/20 backdrop-blur-sm border border-amber-500/30 text-amber-300 font-bold text-[10px]">VIRALITY: 93</span>
+                <span class="px-2 py-0.5 rounded bg-emerald-500/20 backdrop-blur-sm border border-emerald-500/30 text-emerald-300 font-bold text-[10px]">VIRALITY: 93</span>
               </div>
 
               <div class="relative z-10 self-center">
@@ -490,21 +531,21 @@
               </div>
 
               <div class="relative z-10 space-y-1.5">
-                <span class="text-[10px] font-mono text-zinc-400">14:00 &rarr; 14:45</span>
+                <span class="text-[10px] font-mono text-emerald-300">14:00 &rarr; 14:45</span>
                 <h4 class="text-sm font-bold text-white font-display">Productize Yourself & Own Equity</h4>
                 <p class="text-xs text-zinc-300 line-clamp-2 leading-relaxed">
                   "You are not going to get rich renting out your time. You must own equity, a piece of a business."
                 </p>
               </div>
             </div>
-            <div class="p-3 border-t border-white/[0.08] flex items-center justify-between text-xs text-zinc-400">
+            <div class="p-3 border-t border-emerald-500/15 flex items-center justify-between text-xs text-zinc-400">
               <span>Naval Ravikant</span>
               <span class="text-emerald-400 font-medium">Auto-Centered</span>
             </div>
           </div>
 
           <!-- Sample Card 3 -->
-          <div class="rounded-xl border border-white/[0.08] bg-zinc-950 overflow-hidden group hover:border-white/[0.2] transition">
+          <div class="rounded-xl border border-emerald-500/20 bg-[#0A1610] overflow-hidden group hover:border-emerald-500/40 transition">
             <div class="relative aspect-[9/13] bg-zinc-900 overflow-hidden flex flex-col justify-between p-4">
               <!-- Actual Real Image Poster Thumbnail -->
               <img 
@@ -516,7 +557,7 @@
               
               <div class="relative z-10 flex items-center justify-between text-[11px]">
                 <span class="px-2 py-0.5 rounded bg-black/80 backdrop-blur-sm border border-white/10 text-white font-mono font-bold">42s</span>
-                <span class="px-2 py-0.5 rounded bg-amber-500/20 backdrop-blur-sm border border-amber-500/30 text-amber-300 font-bold text-[10px]">VIRALITY: 91</span>
+                <span class="px-2 py-0.5 rounded bg-emerald-500/20 backdrop-blur-sm border border-emerald-500/30 text-emerald-300 font-bold text-[10px]">VIRALITY: 91</span>
               </div>
 
               <div class="relative z-10 self-center">
@@ -526,14 +567,14 @@
               </div>
 
               <div class="relative z-10 space-y-1.5">
-                <span class="text-[10px] font-mono text-zinc-400">23:40 &rarr; 24:22</span>
+                <span class="text-[10px] font-mono text-emerald-300">23:40 &rarr; 24:22</span>
                 <h4 class="text-sm font-bold text-white font-display">Judgment Is the Ultimate Leverage</h4>
                 <p class="text-xs text-zinc-300 line-clamp-2 leading-relaxed">
                   "In an age of infinite leverage, judgment is the most important skill. One right decision is worth a thousand hours."
                 </p>
               </div>
             </div>
-            <div class="p-3 border-t border-white/[0.08] flex items-center justify-between text-xs text-zinc-400">
+            <div class="p-3 border-t border-emerald-500/15 flex items-center justify-between text-xs text-zinc-400">
               <span>Naval Ravikant</span>
               <span class="text-emerald-400 font-medium">Auto-Centered</span>
             </div>
@@ -545,19 +586,19 @@
     </section>
 
     <!-- Why Creators Love It (Benefits Grid) -->
-    <section id="features" class="py-16 md:py-20 border-t border-white/[0.07] bg-[#090A0F]">
+    <section id="features" class="py-16 md:py-20 border-t border-emerald-500/15 bg-[#08120D]">
       <div class="max-w-5xl mx-auto px-4 sm:px-6">
         
         <div class="text-center max-w-xl mx-auto mb-12">
-          <div class="text-xs font-mono uppercase tracking-widest text-indigo-400 font-semibold mb-2">Designed for Creators</div>
+          <div class="text-xs font-mono uppercase tracking-widest text-emerald-400 font-semibold mb-2">Designed for Creators</div>
           <h2 class="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">Everything you need to grow on short-form</h2>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
           
-          <div class="p-6 rounded-2xl bg-zinc-950 border border-white/[0.08] hover:border-white/[0.16] transition-colors">
-            <div class="w-10 h-10 rounded-xl bg-zinc-900 border border-white/10 flex items-center justify-center text-zinc-300 mb-4">
-              <svg class="w-5 h-5 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <div class="p-6 rounded-2xl bg-[#0B1812] border border-emerald-500/20 hover:border-emerald-500/40 transition-colors">
+            <div class="w-10 h-10 rounded-xl bg-[#10251C] border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-4">
+              <svg class="w-5 h-5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="10" />
                 <polyline points="12 6 12 12 16 14" />
               </svg>
@@ -568,9 +609,9 @@
             </p>
           </div>
 
-          <div class="p-6 rounded-2xl bg-zinc-950 border border-white/[0.08] hover:border-white/[0.16] transition-colors">
-            <div class="w-10 h-10 rounded-xl bg-zinc-900 border border-white/10 flex items-center justify-center text-zinc-300 mb-4">
-              <svg class="w-5 h-5 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <div class="p-6 rounded-2xl bg-[#0B1812] border border-emerald-500/20 hover:border-emerald-500/40 transition-colors">
+            <div class="w-10 h-10 rounded-xl bg-[#10251C] border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-4">
+              <svg class="w-5 h-5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="2" y="3" width="20" height="14" rx="2" />
                 <line x1="8" y1="21" x2="16" y2="21" />
                 <line x1="12" y1="17" x2="12" y2="21" />
@@ -582,9 +623,9 @@
             </p>
           </div>
 
-          <div class="p-6 rounded-2xl bg-zinc-950 border border-white/[0.08] hover:border-white/[0.16] transition-colors">
-            <div class="w-10 h-10 rounded-xl bg-zinc-900 border border-white/10 flex items-center justify-center text-zinc-300 mb-4">
-              <svg class="w-5 h-5 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <div class="p-6 rounded-2xl bg-[#0B1812] border border-emerald-500/20 hover:border-emerald-500/40 transition-colors">
+            <div class="w-10 h-10 rounded-xl bg-[#10251C] border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-4">
+              <svg class="w-5 h-5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                 <path d="m9 12 2 2 4-4" />
               </svg>
@@ -601,49 +642,49 @@
     </section>
 
     <!-- Developer & Technical Specs (Clean & Minimal) -->
-    <section id="tech" class="py-14 sm:py-16 border-t border-white/[0.07] bg-[#07080B]">
+    <section id="tech" class="py-14 sm:py-16 border-t border-emerald-500/15 bg-[#060C09]">
       <div class="max-w-4xl mx-auto px-4 sm:px-6">
         
-        <div class="flex items-center justify-between pb-6 border-b border-white/[0.08]">
+        <div class="flex items-center justify-between pb-6 border-b border-emerald-500/15">
           <div>
-            <div class="text-xs font-mono uppercase text-indigo-400 font-semibold">Under the Hood</div>
+            <div class="text-xs font-mono uppercase text-emerald-400 font-semibold">Under the Hood</div>
             <h3 class="text-lg font-bold font-display text-white mt-0.5">Built on Modern Open Source Infrastructure</h3>
           </div>
-          <span class="text-xs font-mono text-zinc-400">Self-Hostable</span>
+          <span class="text-xs font-mono text-emerald-400/80">Self-Hostable</span>
         </div>
 
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 my-6 text-xs font-mono">
-          <div class="p-3 rounded-lg bg-zinc-900/60 border border-white/5">
+          <div class="p-3 rounded-lg bg-[#0B1712] border border-emerald-500/20">
             <span class="text-zinc-500 text-[10px]">TRANSCRIPTION</span>
             <div class="text-white font-bold mt-1">Deepgram Nova-2</div>
           </div>
-          <div class="p-3 rounded-lg bg-zinc-900/60 border border-white/5">
+          <div class="p-3 rounded-lg bg-[#0B1712] border border-emerald-500/20">
             <span class="text-zinc-500 text-[10px]">FACE TRACKING</span>
             <div class="text-white font-bold mt-1">OpenCV YuNet (.onnx)</div>
           </div>
-          <div class="p-3 rounded-lg bg-zinc-900/60 border border-white/5">
+          <div class="p-3 rounded-lg bg-[#0B1712] border border-emerald-500/20">
             <span class="text-zinc-500 text-[10px]">VIDEO ENCODER</span>
             <div class="text-white font-bold mt-1">FFmpeg 6.0+</div>
           </div>
-          <div class="p-3 rounded-lg bg-zinc-900/60 border border-white/5">
+          <div class="p-3 rounded-lg bg-[#0B1712] border border-emerald-500/20">
             <span class="text-zinc-500 text-[10px]">DATABASE</span>
             <div class="text-white font-bold mt-1">Supabase Postgres</div>
           </div>
         </div>
 
         <!-- Terminal Quickstart -->
-        <div class="rounded-xl border border-white/[0.1] bg-black p-4 font-mono text-xs text-zinc-300">
+        <div class="rounded-xl border border-emerald-500/20 bg-black/60 p-4 font-mono text-xs text-zinc-300">
           <div class="flex items-center justify-between pb-2 text-zinc-500 border-b border-white/5">
             <span>Run locally with Docker</span>
             <button 
               type="button" 
               onclick="copyDockerCommand(this)" 
-              class="text-indigo-400 hover:text-white transition cursor-pointer"
+              class="text-emerald-400 hover:text-white transition cursor-pointer"
             >
               Copy Command
             </button>
           </div>
-          <pre class="mt-3 overflow-x-auto text-zinc-400"><code id="docker-cmd">git clone https://github.com/subhajitorrin/clipper.git &amp;&amp; cd clipper &amp;&amp; docker compose up --build</code></pre>
+          <pre class="mt-3 overflow-x-auto text-zinc-300"><code id="docker-cmd">git clone https://github.com/subhajitorrin/clipper.git &amp;&amp; cd clipper &amp;&amp; docker compose up --build</code></pre>
         </div>
 
       </div>
@@ -652,13 +693,13 @@
   </main>
 
   <!-- Clean Engineering Footer -->
-  <footer class="border-t border-white/[0.08] bg-[#06070A] py-10 text-xs text-zinc-500">
+  <footer class="border-t border-emerald-500/15 bg-[#050A07] py-10 text-xs text-zinc-500">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-4">
       
       <div class="flex items-center gap-3">
-        <span class="text-zinc-300 font-semibold font-display">Clipper AI</span>
+        <span class="text-zinc-200 font-semibold font-display">Clipper AI</span>
         <span class="text-zinc-600">/</span>
-        <span>Turn long YouTube videos into viral vertical clips</span>
+        <span class="text-zinc-400">Turn long YouTube videos into viral vertical clips</span>
       </div>
 
       <div class="flex items-center gap-6">
