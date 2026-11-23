@@ -137,9 +137,10 @@ Clipper/
 
 ### Prerequisites
 
-- **Node.js** 20.x or higher & **pnpm** (or npm)
-- **Python** 3.11 or higher
-- **FFmpeg & FFprobe** (bundled in `worker/bin/` for Windows, or install via package manager on Linux/macOS)
+- [Docker & Docker Compose](https://www.docker.com/products/docker-desktop/) *(recommended for instant cross-platform setup)*
+- Alternatively, for local manual run:
+  - **Node.js** 20.x or higher & **pnpm**
+  - **Python** 3.11 or higher & **FFmpeg**
 - **Supabase Account** ([supabase.com](https://supabase.com))
 - **Deepgram API Key** ([deepgram.com](https://deepgram.com))
 - **OpenAI API Key** ([platform.openai.com](https://platform.openai.com))
@@ -148,14 +149,42 @@ Clipper/
 
 ### 1. Database Setup (Supabase)
 
-1. Create a new Supabase project.
-2. In your Supabase Dashboard, navigate to the **SQL Editor**.
+1. Create a free project on [Supabase](https://supabase.com).
+2. Open the **SQL Editor** in your Supabase Dashboard.
 3. Run the migration script located at [`supabase/migrations/20261121000000_init_clipforge.sql`](file:///d:/Projects/Clipper/supabase/migrations/20261121000000_init_clipforge.sql).
-4. Create a public Supabase Storage bucket named `clips`.
+4. Under **Storage**, create a public bucket named `clips`.
 
 ---
 
-### 2. Frontend Configuration & Setup
+### ⚡ Quickstart with Docker (Recommended)
+
+Run the entire stack (Next.js web UI + Python AI video worker) with a single command on Windows, macOS, or Linux:
+
+1. **Clone the repo and configure environment variables**:
+   ```bash
+   cp .env.example .env
+   ```
+   Fill in your Supabase credentials, Deepgram API key, and OpenAI API key in `.env`.
+
+2. **Launch with Docker Compose**:
+   ```bash
+   docker compose up --build
+   ```
+
+3. **Access the application**:
+   - Open [http://localhost:3000](http://localhost:3000) in your browser.
+   - The worker container will automatically claim and process jobs in the background!
+
+To stop containers:
+```bash
+docker compose down
+```
+
+---
+
+### 🛠️ Alternative: Manual Local Setup (Without Docker)
+
+#### Frontend Configuration & Setup
 
 ```bash
 cd frontend
