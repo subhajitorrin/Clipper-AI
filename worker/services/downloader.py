@@ -25,7 +25,7 @@ class Downloader:
             'postprocessors': [{
                 'key': 'FFmpegExtractAudio',
                 'preferredcodec': 'mp3',
-                'preferredquality': '128',
+                'preferredquality': '64',
             }],
             'quiet': False,
             'no_warnings': True,

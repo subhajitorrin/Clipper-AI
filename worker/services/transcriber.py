@@ -4,7 +4,11 @@ from config import settings
 
 class Transcriber:
     def __init__(self):
-        self.client = DeepgramClient(api_key=settings.deepgram_api_key)
+        # deepgram-sdk supports timeout directly in seconds (e.g. 600.0s = 10 minutes)
+        self.client = DeepgramClient(
+            api_key=settings.deepgram_api_key,
+            timeout=600.0
+        )
 
     def transcribe(self, audio_path: str) -> dict:
         """Transcribes audio file using Deepgram Nova-2 and returns full text + word timestamps."""

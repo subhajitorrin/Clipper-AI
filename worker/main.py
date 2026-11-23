@@ -14,6 +14,7 @@ from services.downloader import Downloader
 from services.transcriber import Transcriber
 from services.analyzer import Analyzer
 from services.video_editor import VideoEditor
+from services.caption_generator import CaptionGenerator
 from services.supabase_service import SupabaseService
 
 def process_job(job: dict, db: SupabaseService, transcriber: Transcriber, analyzer: Analyzer):
@@ -73,9 +74,23 @@ def process_job(job: dict, db: SupabaseService, transcriber: Transcriber, analyz
             raw_section_path = os.path.join(job_temp_dir, f"raw_clip_{i}.mp4")
             vertical_clip_path = os.path.join(job_temp_dir, f"clip_{i}.mp4")
             thumbnail_clip_path = os.path.join(job_temp_dir, f"thumb_{i}.jpg")
+            subtitle_ass_path = os.path.join(job_temp_dir, f"clip_{i}.ass")
 
             # Zero-storage: only download the exact chunk
             Downloader.download_section(video_url, moment["start_time"], moment["end_time"], raw_section_path)
+
+            # Generate dynamic word-by-word karaoke ASS captions
+            try:
+                CaptionGenerator.generate_ass(
+                    words=words,
+                    clip_start=moment["start_time"],
+                    clip_end=moment["end_time"],
+                    output_ass_path=subtitle_ass_path,
+                    style_preset="HormoziYellow"
+                )
+            except Exception as ce:
+                print(f"Caption generation warning: {ce}")
+                subtitle_ass_path = None
             
             # Update progress: rendering vertical 9:16
             progress_val = int(75 + ((i + 0.6) / total_moments) * 20)
@@ -84,9 +99,9 @@ def process_job(job: dict, db: SupabaseService, transcriber: Transcriber, analyz
                 "current_clip_index": clip_num,
                 "current_clip_title": clip_title,
                 "current_clip_stage": "rendering",
-                "step_description": f"Reframing & rendering clip {clip_num} of {total_moments} to 9:16 vertical..."
+                "step_description": f"Reframing & rendering clip {clip_num} of {total_moments} with dynamic captions..."
             })
-            VideoEditor.render_vertical_clip(raw_section_path, vertical_clip_path)
+            VideoEditor.render_vertical_clip(raw_section_path, vertical_clip_path, subtitle_path=subtitle_ass_path)
 
             # Generate high-quality 9:16 video thumbnail frame
             try:

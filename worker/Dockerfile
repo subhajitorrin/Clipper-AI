@@ -4,9 +4,11 @@ FROM python:3.11-slim
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PYTHONUNBUFFERED=1
 
-# Install system dependencies: FFmpeg, FFprobe, and OpenCV runtime libraries
+# Install system dependencies: FFmpeg, FFprobe, OpenCV runtime, and fonts for subtitle rendering
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ffmpeg \
+    fonts-freefont-ttf \
+    fonts-dejavu-core \
     libsm6 \
     libxext6 \
     libxrender-dev \

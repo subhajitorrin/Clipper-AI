@@ -80,6 +80,9 @@ flowchart TD
 - **💾 Zero-Waste Bandwidth Optimization**:
   - Never downloads full 4GB–10GB video files upfront.
   - Downloads **audio only** for speech processing, then selectively downloads **only the exact seconds** required for approved clips using `yt-dlp` download range filters.
+- **🔥 Dynamic Animated Word-by-Word Captions**:
+  - Leverages Deepgram Nova-2 word-level millisecond timestamps to render viral "Alex Hormozi" style animated captions into vertical video via Advanced SubStation Alpha (`.ass`) and FFmpeg.
+  - Groups speech into short 3–4 word high-retention rhythmic bursts with real-time active word highlighting, high-contrast borders, and platform-safe vertical margins (protecting captions from TikTok/Reels UI buttons).
 - **🎨 Sleek Dark-Mode Dashboard**:
   - Real-time stage progress (`audio` ➔ `transcribing` ➔ `moments` ➔ `rendering`).
   - Interactive clip player gallery with inline video preview, download triggers, and virality breakdown.
@@ -160,25 +163,30 @@ Clipper/
 
 Run the entire stack (Next.js web UI + Python AI video worker) with a single command on Windows, macOS, or Linux:
 
-1. **Clone the repo and configure environment variables**:
+1. **Configure environment variables**:
    ```bash
    cp .env.example .env
    ```
    Fill in your Supabase credentials, Deepgram API key, and OpenAI API key in `.env`.
 
-2. **Launch with Docker Compose**:
+2. **Build the application**:
    ```bash
-   docker compose up --build
+   docker-compose build --no-cache
    ```
 
-3. **Access the application**:
-   - Open [http://localhost:3000](http://localhost:3000) in your browser.
-   - The worker container will automatically claim and process jobs in the background!
+3. **Start the application**:
+   ```bash
+   docker-compose up -d
+   ```
 
-To stop containers:
-```bash
-docker compose down
-```
+4. **Stop the application**:
+   ```bash
+   docker-compose down
+   ```
+
+5. **Access the application**:
+   - Open [http://localhost:3000](http://localhost:3000) in your browser.
+   - The worker container will automatically claim pending jobs, track speakers, burn word-level captions, and push rendered clips to Supabase!
 
 ---
 

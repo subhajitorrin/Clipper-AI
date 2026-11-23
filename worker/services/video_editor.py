@@ -1,7 +1,6 @@
 import subprocess
 import os
 from services.ffmpeg_utils import get_ffmpeg_exe
-from services.face_tracker import FaceTracker
 
 class VideoEditor:
     face_tracker = None
@@ -9,14 +8,22 @@ class VideoEditor:
     @classmethod
     def get_face_tracker(cls):
         if cls.face_tracker is None:
-            cls.face_tracker = FaceTracker()
+            try:
+                from services.face_tracker import FaceTracker
+                cls.face_tracker = FaceTracker()
+            except ImportError:
+                cls.face_tracker = None
         return cls.face_tracker
 
     @staticmethod
-    def render_vertical_clip(input_video_path: str, output_clip_path: str, words_for_clip: list = None) -> str:
+    def render_vertical_clip(
+        input_video_path: str,
+        output_clip_path: str,
+        subtitle_path: str = None
+    ) -> str:
         """
         Reframes landscape video (16:9) to vertical 9:16 (1080x1920) by tracking the main character/speaker's
-        face so they stay centered in the frame.
+        face so they stay centered in the frame, and burns dynamic styled captions if subtitle_path is provided.
         """
         os.makedirs(os.path.dirname(output_clip_path), exist_ok=True)
         ffmpeg = get_ffmpeg_exe()
@@ -38,7 +45,16 @@ class VideoEditor:
             crop_x_expr = "(iw-ow)/2"
 
         # 9:16 dynamic crop filter & scale to standard 1080x1920
-        vf_filter = f"crop=ih*(9/16):ih:{crop_x_expr}:0,scale=1080:1920"
+        filters = [f"crop=ih*(9/16):ih:{crop_x_expr}:0", "scale=1080:1920"]
+
+        # Add burned animated subtitles if available
+        if subtitle_path and os.path.exists(subtitle_path) and os.path.getsize(subtitle_path) > 0:
+            # Escape path special characters for FFmpeg filter syntax
+            escaped_sub_path = subtitle_path.replace("\\", "/").replace(":", "\\:").replace("'", "\\'")
+            filters.append(f"subtitles='{escaped_sub_path}'")
+            print(f"  [VideoEditor] Burning dynamic word-level subtitles from: {os.path.basename(subtitle_path)}")
+
+        vf_filter = ",".join(filters)
 
         cmd = [
             ffmpeg,
@@ -55,6 +71,14 @@ class VideoEditor:
 
         result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         if result.returncode != 0:
+            # If subtitles filter failed (e.g. environment issue), retry cleanly without subtitles as graceful fallback
+            if subtitle_path and "subtitles" in result.stderr:
+                print("  [VideoEditor] Subtitles filter error, falling back to clean render without subtitles...")
+                clean_filters = f"crop=ih*(9/16):ih:{crop_x_expr}:0,scale=1080:1920"
+                cmd[4] = clean_filters
+                retry_result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                if retry_result.returncode == 0:
+                    return output_clip_path
             raise RuntimeError(f"FFmpeg render error: {result.stderr[-500:]}")
 
         return output_clip_path
