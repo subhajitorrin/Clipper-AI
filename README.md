@@ -15,6 +15,20 @@
 
 ---
 
+## 📺 Demo Walkthrough
+
+<p align="center">
+  <video src="https://pub-54b53270ca084c3cb6121e9adb5858a1.r2.dev/demo.mp4" controls="controls" width="100%" style="max-height: 520px; border-radius: 8px;">
+    Your browser does not support the video tag.
+  </video>
+</p>
+
+<p align="center">
+  🎬 <a href="https://pub-54b53270ca084c3cb6121e9adb5858a1.r2.dev/demo.mp4" target="_blank"><b>Watch / Download Direct Demo Video (MP4)</b></a>
+</p>
+
+---
+
 ## 🌟 Overview
 
 **ClipForge AI** is a production-ready, full-stack video automation engine designed to solve the content creator's bottleneck: converting 1–2 hour long-form videos into viral short-form clips for **TikTok, YouTube Shorts, and Instagram Reels**.
