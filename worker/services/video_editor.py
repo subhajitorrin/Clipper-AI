@@ -62,10 +62,10 @@ class VideoEditor:
             "-i", input_video_path,
             "-vf", vf_filter,
             "-c:v", "libx264",
-            "-preset", "veryfast",
-            "-crf", "22",
+            "-preset", "slow",
+            "-crf", "18",
             "-c:a", "aac",
-            "-b:a", "128k",
+            "-b:a", "192k",
             output_clip_path
         ]
 

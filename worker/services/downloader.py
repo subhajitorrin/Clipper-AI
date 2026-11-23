@@ -36,12 +36,12 @@ class Downloader:
 
     @staticmethod
     def download_section(youtube_url: str, start_time: float, end_time: float, output_path: str) -> str:
-        """Downloads ONLY the specified clip section in 1080p/best video format."""
+        """Downloads ONLY the specified clip section in original maximum video quality available."""
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
         ffmpeg_dir = get_bin_dir()
 
         ydl_opts = {
-            'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/bestvideo+bestaudio/best',
+            'format': 'bestvideo+bestaudio/best',
             'outtmpl': output_path,
             'ffmpeg_location': ffmpeg_dir,
             'download_ranges': yt_dlp.utils.download_range_func(None, [(start_time, end_time)]),
